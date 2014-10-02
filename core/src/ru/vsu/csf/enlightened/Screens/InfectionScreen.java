@@ -16,9 +16,6 @@ public abstract class InfectionScreen implements Screen {
 
     public InfectionScreen(Game game){
         this.game = game;
-
-        //w
-        //h = Gdx.graphics.getHeight();
     }
 
     @Override

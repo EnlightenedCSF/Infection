@@ -4,12 +4,11 @@ package ru.vsu.csf.enlightened.GameObjects;
  * Перечислимый тип цветов фишек (в т.ч. указатель, является ли иконка фишки подгружаемой из файла)
  */
 enum PieceColor {
-    Red,
-    Blue,
-    Green,
-    Yellow,
-    Purple,
-    GFX
+    RED,
+    BLUE,
+    GREEN,
+    YELLOW,
+    PURPLE
 }
 
 /**
@@ -22,6 +21,4 @@ public class Piece {
     public Piece(PieceColor c) {
         color = c;
     }
-
-
 }

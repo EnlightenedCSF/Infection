@@ -10,6 +10,8 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import ru.vsu.csf.enlightened.GameObjects.Board;
+import ru.vsu.csf.enlightened.GameObjects.BoardCell;
 
 /**
  * Created by enlightenedcsf on 02.10.14.
@@ -74,8 +76,29 @@ public class MainMenuScreen extends InfectionScreen {
             float x = InfectionScreen.W - Gdx.input.getX();
             float y = InfectionScreen.H - Gdx.input.getY();
 
+
             if (isPointerInButton(x, y, newGameBtn))
-                game.setScreen(new LevelSelectScreen(game));
+                game.setScreen(new GameScreen(game));
+
+            if (isPointerInButton(x, y, multiplayerBtn))
+            {
+                Board board = new Board();
+
+                BoardCell[][] t = new BoardCell[3][2];
+                for (int j = 0; j < t[0].length; j++)
+                    for (int i = 0; i < t.length; i++)
+                        t[i][j] = new BoardCell(false);
+                t[0][1].setEmpty(true);
+
+                board.setCells(t);
+                board.saveToFile("save.igs");
+            }
+
+            if (isPointerInButton(x, y, optionsBtn))
+            {
+                Board board = new Board();
+                board.init("save.igs");
+            }
 
             if (isPointerInButton(x, y, exitBtn))
                 Gdx.app.exit();

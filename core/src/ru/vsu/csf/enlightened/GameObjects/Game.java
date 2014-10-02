@@ -12,7 +12,7 @@ public class Game {
 
     private Game() {
         player = new Player("");
-        board = new Board(new File("in.txt"));
+        //board = new Board(new File("in.txt"));
     }
 
     public static Game getGame() {

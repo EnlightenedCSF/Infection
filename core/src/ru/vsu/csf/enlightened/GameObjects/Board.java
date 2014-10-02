@@ -1,6 +1,6 @@
 package ru.vsu.csf.enlightened.GameObjects;
 
-import java.io.File;
+import java.io.*;
 
 /**
  * Вспомогательный класс для инкапсуляции координат клетки поля.
@@ -47,49 +47,74 @@ class Point {
  */
 public class Board {
 
-    /**
-     * Вспомогательный класс клетки игрового поля.
-     */
-    private class BoardCell {
 
-        /**
-         * Существует ли клетка
-         */
-        private boolean isEmpty;
-
-        /**
-         * Фишка
-         */
-        private Piece piece;
-
-
-        private BoardCell(boolean isEmpty) {
-            this.isEmpty = isEmpty;
-        }
-
-        public boolean isEmpty() {
-            return isEmpty;
-        }
-
-        public void setEmpty(boolean isEmpty) {
-            this.isEmpty = isEmpty;
-        }
-
-        public Piece getPiece() {
-            return piece;
-        }
-
-        public void setPiece(Piece piece) {
-            this.piece = piece;
-        }
-    }
 
 
     private  BoardCell[][] cells;
 
-    public Board(File file) {
-        //TODO: init
+    public BoardCell[][] getCells() {
+        return cells;
     }
+
+    public void setCells(BoardCell[][] cells) {
+        this.cells = cells;
+    }
+
+
+    public Board() {
+
+    }
+
+    public void init(String path) {
+        try {
+            DataInputStream reader = new DataInputStream(new FileInputStream(path));
+            int width = reader.readInt();
+            int height = reader.readInt();
+
+            cells = new BoardCell[width][height];
+
+            for (int j = 0; j < cells[0].length; j++) {
+                for (int i = 0; i < cells.length; i++) {
+                    cells[i][j] = new BoardCell(false);
+
+                    if (reader.readInt() == 0)
+                        cells[i][j].setEmpty(true);
+                }
+            }
+
+            reader.close();
+
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public void saveToFile(String path) {
+        try {
+            DataOutputStream writer = new DataOutputStream(new FileOutputStream(path));
+            writer.writeInt(cells.length);
+            writer.writeInt(cells[0].length);
+
+            for (int j = 0; j < cells[0].length; j++) {
+                for (int i = 0; i < cells.length; i++) {
+                    if (cells[i][j].isEmpty())
+                        writer.writeInt(0);
+                    else
+                        writer.writeInt(1);
+                }
+            }
+
+            writer.flush();
+            writer.close();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
 
     /**
      * Метод, обрабатывающий ход
