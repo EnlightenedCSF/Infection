@@ -1,12 +1,15 @@
 package ru.vsu.csf.enlightened.Screens;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
 
 /**
  * Created by enlightenedcsf on 02.10.14.
@@ -67,6 +70,20 @@ public class MainMenuScreen extends InfectionScreen {
         exitBtn.draw(batch);
         batch.end();
 
+        if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)){
+            float x = InfectionScreen.W - Gdx.input.getX();
+            float y = InfectionScreen.H - Gdx.input.getY();
 
+            if (isPointerInButton(x, y, newGameBtn))
+                game.setScreen(new LevelSelectScreen(game));
+
+            if (isPointerInButton(x, y, exitBtn))
+                Gdx.app.exit();
+        }
     }
+
+    private boolean isPointerInButton(float x, float y, Sprite btn) {
+        return btn.getBoundingRectangle().contains(x, y);
+    }
+
 }
