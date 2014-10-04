@@ -3,6 +3,7 @@ package ru.vsu.csf.enlightened.Screens;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import ru.vsu.csf.enlightened.GameObjects.Board;
 import ru.vsu.csf.enlightened.Renderers.BoardRenderer;
@@ -24,6 +25,25 @@ public class GameScreen extends InfectionScreen {
         board = new Board();
         board.init("save.igs");
         boardRenderer = new BoardRenderer(board);
+
+        Gdx.input.setInputProcessor(new InputAdapter(){
+            @Override
+            public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+                screenY = 480 - screenY;
+
+
+
+                return false;
+            }
+
+            @Override
+            public boolean mouseMoved(int screenX, int screenY) {
+                screenY = 480 - screenY;
+
+                boardRenderer.setSelectionPosition(screenX, screenY);
+                return true;
+            }
+        });
     }
 
     @Override
@@ -32,8 +52,5 @@ public class GameScreen extends InfectionScreen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         boardRenderer.render();
-
-        if (Gdx.input.isButtonPressed(Input.Keys.ESCAPE))
-            game.setScreen(new MainMenuScreen(game));
     }
 }

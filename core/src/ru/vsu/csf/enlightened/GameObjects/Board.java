@@ -66,51 +66,86 @@ public class Board {
     }
 
     public void init(String path) {
-        try {
-            DataInputStream reader = new DataInputStream(new FileInputStream(path));
-            int width = reader.readInt();
-            int height = reader.readInt();
+        BufferedReader reader = null;
 
-            cells = new BoardCell[width][height];
+        try {
+            File file = new File(path);
+            reader = new BufferedReader(new FileReader(file));
+
+            String[] sizes = reader.readLine().split(" ");
+            cells = new BoardCell[Integer.parseInt(sizes[0])][Integer.parseInt(sizes[1])];
 
             for (int j = 0; j < cells[0].length; j++) {
-                for (int i = 0; i < cells.length; i++) {
-                    cells[i][j] = new BoardCell(false);
+                String[] tiles = reader.readLine().split(" ");
 
-                    if (reader.readInt() == 0)
-                        cells[i][j].setEmpty(true);
+                for (int i = 0; i < cells.length; i++) {
+                    cells[i][j] = new BoardCell(Integer.parseInt(tiles[i]) == 0);
                 }
             }
 
-            reader.close();
-
+            String pieceInfo;
+            while ((pieceInfo = reader.readLine()) != null) {
+                String[] data = pieceInfo.split(" ");
+                cells[Integer.parseInt(data[1])][Integer.parseInt(data[2])].setPiece(new Piece(PieceColor.valueOf(data[0])));
+            }
         }
         catch (Exception e) {
             e.printStackTrace();
+        }
+        finally {
+            assert reader != null;
+            try {
+                reader.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
 
     public void saveToFile(String path) {
+
+        BufferedWriter writer = null;
+
         try {
-            DataOutputStream writer = new DataOutputStream(new FileOutputStream(path));
-            writer.writeInt(cells.length);
-            writer.writeInt(cells[0].length);
+            File f = new File(path);
+            writer = new BufferedWriter(new FileWriter(f));
+
+            writer.write(cells.length + " " + cells[0].length + "\n");
 
             for (int j = 0; j < cells[0].length; j++) {
-                for (int i = 0; i < cells.length; i++) {
-                    if (cells[i][j].isEmpty())
-                        writer.writeInt(0);
+                for (BoardCell[] cell : cells) {
+                    if (cell[j].isEmpty())
+                        writer.write("0 ");
                     else
-                        writer.writeInt(1);
+                        writer.write("1 ");
                 }
+                writer.write('\n');
             }
 
-            writer.flush();
-            writer.close();
+            String pieceInfo = "";
+            for (int j = 0; j < cells[0].length; j++) {
+                for (int i = 0; i < cells.length; i++) {
+                    if (!cells[i][j].isEmpty() && cells[i][j].getPiece() != null) {
+                        pieceInfo = cells[i][j].getPiece().toString() + " " + i + " " + j + "\n";
+                        writer.write(pieceInfo);
+                    }
+                }
+            }
         }
         catch (Exception e) {
             e.printStackTrace();
+        }
+        finally {
+            try {
+                assert writer != null;
+                writer.flush();
+                writer.close();
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
         }
     }
 
