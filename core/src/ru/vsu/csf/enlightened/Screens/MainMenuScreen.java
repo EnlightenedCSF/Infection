@@ -67,17 +67,13 @@ public class MainMenuScreen extends InfectionScreen {
                         for (int i = 0; i < t.length; i++)
                             t[i][j] = new BoardCell(false);
 
-                    t[1][1].setEmpty(true);
-                    t[2][2].setEmpty(true);
-                    t[3][3].setEmpty(true);
-                    t[0][4].setEmpty(true);
-                    t[4][0].setEmpty(true);
 
                     t[1][0].setPiece(new Piece(PieceColor.RED));
-                    t[0][1].setPiece(new Piece(PieceColor.BLUE));
-                    t[3][0].setPiece(new Piece(PieceColor.GREEN));
-                    t[0][3].setPiece(new Piece(PieceColor.PURPLE));
-                    t[2][1].setPiece(new Piece(PieceColor.YELLOW));
+                    t[0][1].setPiece(new Piece(PieceColor.RED));
+                    t[4][3].setPiece(new Piece(PieceColor.BLUE));
+                    t[3][4].setPiece(new Piece(PieceColor.BLUE));
+                    t[4][4].setPiece(new Piece(PieceColor.BLUE));
+                    t[2][2].setPiece(new Piece(PieceColor.GREEN));
 
                     board.setCells(t);
                     board.saveToFile("save.igs");

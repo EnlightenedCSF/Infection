@@ -1,6 +1,6 @@
 package ru.vsu.csf.enlightened.GameObjects;
 
-import java.io.File;
+import java.util.ArrayList;
 
 /**
  * Класс игры, отвечающий за игровую логику
@@ -11,8 +11,7 @@ public class Game {
     private static Game instance;
 
     private Game() {
-        player = new Player("");
-        //board = new Board(new File("in.txt"));
+        players = new ArrayList<Player>();
     }
 
     public static Game getGame() {
@@ -22,7 +21,9 @@ public class Game {
     }
     //endregion
 
-    private Player player;
+    private Player currentPlayer;
+    private ArrayList<Player> players;
+    private int currentPlayerIndex;
     private Board board;
 
     public Board getBoard() {
@@ -33,11 +34,36 @@ public class Game {
         this.board = board;
     }
 
-    public Player getPlayer() {
-        return player;
+    public Player getCurrentPlayer() {
+        return currentPlayer;
     }
 
-    public void setPlayer(Player player) {
-        this.player = player;
+    public void setCurrentPlayer(Player currentPlayer) {
+        this.currentPlayer = currentPlayer;
+    }
+
+    public void addPlayer(PieceColor color) {
+        players.add(new Player(color));
+        if (players.size() == 1) {
+            currentPlayerIndex = 0;
+            currentPlayer = players.get(currentPlayerIndex);
+        }
+    }
+
+    public ArrayList<Player> getPlayers() {
+        return players;
+    }
+
+    public void passTurn() {
+
+        do {
+            if (currentPlayerIndex == players.size() - 1)
+                currentPlayerIndex = 0;
+            else
+                currentPlayerIndex++;
+        }
+        while (players.get(currentPlayerIndex).wasDefeated());
+
+        currentPlayer = players.get(currentPlayerIndex);
     }
 }

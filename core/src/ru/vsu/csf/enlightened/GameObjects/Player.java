@@ -10,39 +10,33 @@ public class Player {
      */
     private int score;
 
-    /**
-     * Количество пройденных уровней - общий прогресс по игре
-     */
-    private int passedLevelCount;
+    private PieceColor color;
 
-    /**
-     * Никнейм
-     */
-    private String nickName;
+    private boolean wasDefeated;
 
-    public Player(String nick) {
+    public Player(PieceColor color) {
         score = 0;
-        passedLevelCount = 0;
-        nickName = nick;
-    }
-
-    public int getPassedLevelCount() {
-        return passedLevelCount;
-    }
-
-    public void setPassedLevelCount(int passedLevelCount) {
-        this.passedLevelCount = passedLevelCount;
+        this.color = color;
+        wasDefeated = false;
     }
 
     public int getScore() {
         return score;
     }
 
-    public void setScore(int score) {
-        this.score = score;
-    }
-
     public void addScore(int score) {
         this.score += score;
+    }
+
+    public PieceColor getColor() {
+        return color;
+    }
+
+    public void setWasDefeated(boolean wasDefeated) {
+        this.wasDefeated = wasDefeated;
+    }
+
+    public boolean wasDefeated() {
+        return wasDefeated;
     }
 }

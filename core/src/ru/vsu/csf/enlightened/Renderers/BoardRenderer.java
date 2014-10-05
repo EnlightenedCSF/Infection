@@ -1,17 +1,12 @@
 package ru.vsu.csf.enlightened.Renderers;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import ru.vsu.csf.enlightened.GameObjects.Board;
 import ru.vsu.csf.enlightened.GameObjects.BoardCell;
 
-/**
- * Created by enlightenedcsf on 02.10.14.
- */
+/** Created by enlightenedcsf on 02.10.14. */
 public class BoardRenderer {
 
     private static final float MARGIN_TOP   = 70;
@@ -20,10 +15,11 @@ public class BoardRenderer {
 
 
     Board board;
-    Texture pieceRed, pieceBlue, pieceGreen, piecePurple, pieceYellow;
+    Texture pieceRed, pieceBlue, pieceGreen, piecePurple, pieceYellow, pieceSelected;
     Texture tile;
+    Texture selectionMark;
 
-    private int cellX, cellY;
+    //private int cellX = -1, cellY = -1;
 
     Batch batch = new SpriteBatch();
 
@@ -39,8 +35,9 @@ public class BoardRenderer {
         pieceGreen = new Texture("pieceGreen.png");
         piecePurple = new Texture("piecePurple.png");
         pieceYellow = new Texture("pieceYellow.png");
-
+        pieceSelected = new Texture("pieceSelected.png");
         tile = new Texture("tile.png");
+        selectionMark = new Texture("selectionMark.png");
     }
 
 
@@ -48,10 +45,6 @@ public class BoardRenderer {
         BoardCell[][] cells = board.getCells();
 
         batch.begin();
-        //batch.draw(tile, MARGIN_LEFT + 0*CELL_SIZE, MARGIN_TOP + 0*CELL_SIZE, CELL_SIZE, CELL_SIZE);
-
-        BitmapFont font = new BitmapFont();
-        font.setColor(Color.RED);
 
         for (int j = 0; j < cells[0].length; j++) {
             for (int i = 0; i < cells.length; i++) {
@@ -77,32 +70,39 @@ public class BoardRenderer {
                                 break;
                         }
                     }
-
-                    font.draw(batch, i+"; "+j, MARGIN_LEFT + i*CELL_SIZE + 5, MARGIN_TOP + j*CELL_SIZE + 5);
                 }
             }
         }
 
-        font.setColor(Color.GREEN);
-        //boolean xOK = cellX>=0 && cellX < cells.length;
-        //Gdx.app.log("", xOK+"");
+        int cellX = board.getSelectedCell().getX();
+        int cellY = board.getSelectedCell().getY();
+
         if (cellX >= 0 && cellX < cells.length
                 && cellY >= 0 && cellY < cells[0].length
                 && !cells[cellX][cellY].isEmpty()) {
-            font.draw(batch, "v", MARGIN_LEFT + cellX*CELL_SIZE + 20, MARGIN_TOP + cellY*CELL_SIZE + 30);
+
+            batch.draw(selectionMark, MARGIN_LEFT + cellX*CELL_SIZE + 2,
+                    MARGIN_TOP + cellY*CELL_SIZE + 2,
+                    CELL_SIZE - 2,
+                    CELL_SIZE - 2);
+        }
+
+        if (board.hasSelectedPiece()) {
+            batch.draw(pieceSelected, MARGIN_LEFT + board.getSelectedPiecePosition().getX()*CELL_SIZE + 4,
+                    MARGIN_TOP + board.getSelectedPiecePosition().getY()*CELL_SIZE + 4,
+                    CELL_SIZE - 4,
+                    CELL_SIZE - 4);
         }
 
         batch.end();
     }
 
+
     public void setSelectionPosition(int x, int y) {
         x -= MARGIN_LEFT;
         y -= MARGIN_TOP;
 
-        //int xc = (int)x % CELL_SIZE;
-        cellX = (int)(x / CELL_SIZE);
-        cellY = (int)(y / CELL_SIZE);
-
-        //Gdx.app.log("gm", cellX+"; "+cellY);
+        board.getSelectedCell().setX((int) (x / CELL_SIZE));
+        board.getSelectedCell().setY((int)(y / CELL_SIZE));
     }
 }

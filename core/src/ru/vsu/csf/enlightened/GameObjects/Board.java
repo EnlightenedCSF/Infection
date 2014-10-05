@@ -1,44 +1,10 @@
 package ru.vsu.csf.enlightened.GameObjects;
 
+import com.badlogic.gdx.Gdx;
+
 import java.io.*;
-
-/**
- * Вспомогательный класс для инкапсуляции координат клетки поля.
- */
-class Point {
-
-    /**Х-компонента*/
-    private int x;
-
-    /**Y-компонента*/
-    private int y;
-
-    public Point() {
-        x = 0;
-        y = 0;
-    }
-
-    public Point(int x, int y) {
-        this.x = x;
-        this.y = y;
-    }
-
-    public int getX() {
-        return x;
-    }
-
-    public void setX(int x) {
-        this.x = x;
-    }
-
-    public int getY() {
-        return y;
-    }
-
-    public void setY(int y) {
-        this.y = y;
-    }
-}
+import java.util.ArrayList;
+import java.util.HashMap;
 
 
 /**
@@ -47,10 +13,30 @@ class Point {
  */
 public class Board {
 
-
-
-
     private  BoardCell[][] cells;
+    private boolean hasSelectedPiece;
+    private Point selectedCell;
+    private Point selectedPiecePosition;
+
+    private static Point[] neighbours;
+    private HashMap<PieceColor, Integer> scores;
+
+    public Board() {
+        hasSelectedPiece = false;
+        selectedCell = new Point(-1, -1);
+        selectedPiecePosition = new Point(-1, -1);
+        scores = new HashMap<PieceColor, Integer>();
+
+        neighbours = new Point[8];
+        neighbours[0] = new Point(-1, -1);
+        neighbours[1] = new Point(-1, 0);
+        neighbours[2] = new Point(-1, 1);
+        neighbours[3] = new Point(0, -1);
+        neighbours[4] = new Point(1, -1);
+        neighbours[5] = new Point(1, 0);
+        neighbours[6] = new Point(1, 1);
+        neighbours[7] = new Point(0, 1);
+    }
 
     public BoardCell[][] getCells() {
         return cells;
@@ -60,9 +46,24 @@ public class Board {
         this.cells = cells;
     }
 
+    public Point getSelectedCell() {
+        return selectedCell;
+    }
 
-    public Board() {
+    public Point getSelectedPiecePosition() {
+        return selectedPiecePosition;
+    }
 
+    public void setSelectedPiecePosition(Point selectedPiecePosition) {
+        this.selectedPiecePosition = selectedPiecePosition;
+    }
+
+    public void setSelectedCell(Point selectedCell) {
+        this.selectedCell = selectedCell;
+    }
+
+    public boolean hasSelectedPiece() {
+        return hasSelectedPiece;
     }
 
     public void init(String path) {
@@ -83,10 +84,23 @@ public class Board {
                 }
             }
 
+            ArrayList<PieceColor> colors = new ArrayList<PieceColor>();
             String pieceInfo;
             while ((pieceInfo = reader.readLine()) != null) {
                 String[] data = pieceInfo.split(" ");
-                cells[Integer.parseInt(data[1])][Integer.parseInt(data[2])].setPiece(new Piece(PieceColor.valueOf(data[0])));
+                PieceColor color = PieceColor.valueOf(data[0]);
+                if (!colors.contains(color)) {
+                    Game.getGame().addPlayer(color);
+                    colors.add(color);
+                    scores.put(color, 0);
+                }
+
+                if (scores.containsKey(color)) {
+                    Integer x = scores.get(color);
+                    scores.put(color, ++x);
+                }
+
+                cells[Integer.parseInt(data[1])][Integer.parseInt(data[2])].setPiece(new Piece(color));
             }
         }
         catch (Exception e) {
@@ -157,7 +171,24 @@ public class Board {
      * @param to Координаты клетки назначения
      */
     public void makeMove(Point from, Point to) {
-        //TODO: make a move
+        int dist = getDistance(selectedPiecePosition.getX(), selectedPiecePosition.getY(),
+                selectedCell.getX(), selectedCell.getY());
+
+        PieceColor currentColor = Game.getGame().getCurrentPlayer().getColor();
+        cells[to.getX()][to.getY()].setPiece(new Piece(currentColor));
+        Integer count = scores.get(currentColor);
+        count++;
+
+        if (dist == 2)
+        {
+            cells[from.getX()][from.getY()].setPiece(null);
+            count--;
+        }
+        scores.put(currentColor, count);
+
+        infect(to);
+
+        Game.getGame().passTurn();
     }
 
 
@@ -166,8 +197,80 @@ public class Board {
      * @param source Клетка, вокруг которой происходит заражение
      */
     protected void infect(Point source) {
-        //TODO: infection logic
+        int xs = source.getX();
+        int ys = source.getY();
+
+        Player currentPlayer = Game.getGame().getCurrentPlayer();
+        Integer playerCount = scores.get(currentPlayer.getColor());
+
+        for (Point adjacent : neighbours) {
+            int x = xs + adjacent.getX();
+            int y = ys + adjacent.getY();
+
+            if (x >= 0 && x < cells.length && y >= 0 && y < cells[0].length && !cells[x][y].isEmpty()) {
+                Piece enemy = cells[x][y].getPiece();
+                if (enemy != null && enemy.getColor() != currentPlayer.getColor()){
+
+                    Integer enemyCount = scores.get(enemy.getColor());
+                    scores.put(enemy.getColor(), --enemyCount);
+
+                    enemy.setColor(Game.getGame().getCurrentPlayer().getColor());
+
+                    playerCount++;
+
+                    currentPlayer.addScore(1);
+                }
+            }
+        }
+
+        scores.put(currentPlayer.getColor(), playerCount);
+
+        for (PieceColor color : scores.keySet()) {
+            Gdx.app.log("scores", color + " " + scores.get(color)+"");
+        }
+
+        checkIfDefeat();
+    }
+
+    private void checkIfDefeat() {
+        ArrayList<Player> players = Game.getGame().getPlayers();
+
+        for (Player player : players) {
+            if (player.getColor() == Game.getGame().getCurrentPlayer().getColor())
+                continue;
+
+            if (scores.get(player.getColor()) == 0) {
+                player.setWasDefeated(true);
+            }
+        }
     }
 
 
+    private int getDistance(int x1, int y1, int x2, int y2) {
+        return Math.max(Math.abs(x1 - x2), Math.abs(y1 - y2));
+    }
+
+    public void click() {
+
+        Piece piece = cells[selectedCell.getX()][selectedCell.getY()].getPiece();
+        if (piece != null && piece.getColor() == Game.getGame().getCurrentPlayer().getColor()) {
+            hasSelectedPiece = true;
+            selectedPiecePosition.setX(selectedCell.getX());
+            selectedPiecePosition.setY(selectedCell.getY());
+        }
+        else {
+            int dist = getDistance(selectedPiecePosition.getX(), selectedPiecePosition.getY(),
+                    selectedCell.getX(), selectedCell.getY());
+
+            if (hasSelectedPiece && (dist == 1 || dist == 2) && !cells[selectedCell.getX()][selectedCell.getY()].isEmpty() &&
+                    cells[selectedCell.getX()][selectedCell.getY()].getPiece() == null) {
+
+                makeMove(selectedPiecePosition, selectedCell);
+            }
+
+            hasSelectedPiece = false;
+            selectedPiecePosition.setX(-1);
+            selectedPiecePosition.setY(-1);
+        }
+    }
 }

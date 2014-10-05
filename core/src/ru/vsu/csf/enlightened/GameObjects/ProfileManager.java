@@ -64,7 +64,7 @@ public class ProfileManager {
      * @param index Индекс выбранного игрока в списке
      */
     public void chooseProfile(int index) {
-        Game.getGame().setPlayer(players.get(index));
+        Game.getGame().setCurrentPlayer(players.get(index));
     }
 
 
