@@ -25,6 +25,7 @@ public class Board {
     private static Point[] farNeighbours;
     private HashMap<PieceColor, Integer> scores;
     private HashMap<PieceColor, Boolean> locks;
+    private int freeCells;
 
     public Board() {
         hasSelectedPiece = false;
@@ -32,6 +33,7 @@ public class Board {
         selectedPiecePosition = new Point(-1, -1);
         scores = new HashMap<PieceColor, Integer>();
         locks = new HashMap<PieceColor, Boolean>();
+        freeCells = 0;
 
         neighbours = new Point[8];
         neighbours[0] = new Point(-1, -1);
@@ -107,7 +109,10 @@ public class Board {
                 String[] tiles = reader.readLine().split(" ");
 
                 for (int i = 0; i < cells.length; i++) {
-                    cells[i][j] = new BoardCell(Integer.parseInt(tiles[i]) == 0);
+                    boolean isEmpty = Integer.parseInt(tiles[i]) == 0;
+                    cells[i][j] = new BoardCell(isEmpty);
+                    if (!isEmpty)
+                        freeCells++;
                 }
             }
 
@@ -129,6 +134,7 @@ public class Board {
                 }
 
                 cells[Integer.parseInt(data[1])][Integer.parseInt(data[2])].setPiece(new Piece(color));
+                freeCells--;
             }
         }
         catch (Exception e) {
@@ -206,11 +212,13 @@ public class Board {
         cells[to.getX()][to.getY()].setPiece(new Piece(currentColor));
         Integer count = scores.get(currentColor);
         count++;
+        freeCells--;
 
         if (dist == 2)
         {
             cells[from.getX()][from.getY()].setPiece(null);
             count--;
+            freeCells++;
         }
         scores.put(currentColor, count);
 
@@ -254,13 +262,46 @@ public class Board {
         scores.put(currentPlayer.getColor(), playerCount);
 
         checkIfDefeat();
-        checkIfVictory();
-        checkIfLocked();
+        if (!checkIfVictory())
+            checkIfLocked();
     }
 
 
-    private void checkIfVictory() {
+    private boolean checkIfVictory() {
+        if (freeCells == 0) {
+            int max = -1;
+            PieceColor winner = PieceColor.UNDEFINED;
+            for (PieceColor color : scores.keySet()) {
+                if (scores.get(color) > max) {
+                    max = scores.get(color);
+                    winner = color;
+                }
+            }
 
+            Game.getGame().getPlayerByColor(winner).setHasWon(true);
+            return true;
+        }
+        else {
+            boolean ok = true;
+            boolean kostbIl = false;
+            for (PieceColor color : scores.keySet()) {
+                if (scores.get(color) > 0) {
+                    if (!kostbIl)
+                        kostbIl = true;
+                    else {
+                        ok = false;
+                        break;
+                    }
+                }
+            }
+
+            if (ok) {
+                Game.getGame().getCurrentPlayer().setHasWon(true);
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private void checkIfDefeat() {
@@ -330,7 +371,7 @@ public class Board {
             if (OK)
                 locks.put(player.getColor(), false);
 
-            Gdx.app.log("lock", "The lock on the " + player.getColor() + " is " + !OK);
+            //Gdx.app.log("lock", "The lock on the " + player.getColor() + " is " + !OK);
         }
 
         for (Player player : players) {

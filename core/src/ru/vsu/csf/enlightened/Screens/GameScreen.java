@@ -14,7 +14,7 @@ public class GameScreen extends InfectionScreen {
     Board board;
     BoardRenderer boardRenderer;
     UIRenderer uiRenderer;
-    ru.vsu.csf.enlightened.GameObjects.Game game = ru.vsu.csf.enlightened.GameObjects.Game.getGame();
+    ru.vsu.csf.enlightened.GameObjects.Game myGame = ru.vsu.csf.enlightened.GameObjects.Game.getGame();
 
     public GameScreen(Game game) {
         super(game);
@@ -30,7 +30,8 @@ public class GameScreen extends InfectionScreen {
         Gdx.input.setInputProcessor(new InputAdapter(){
             @Override
             public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-                board.click();
+                if (!ru.vsu.csf.enlightened.GameObjects.Game.getGame().hasEnded())
+                    board.click();
                 return true;
             }
 
@@ -39,6 +40,15 @@ public class GameScreen extends InfectionScreen {
                 screenY = 480 - screenY;
                 boardRenderer.setSelectionPosition(screenX, screenY);
                 return true;
+            }
+
+            @Override
+            public boolean keyDown(int keycode) {
+                if (ru.vsu.csf.enlightened.GameObjects.Game.getGame().hasEnded()) {
+                    game.setScreen(new MainMenuScreen(game));
+                    return true;
+                }
+                return false;
             }
         });
     }

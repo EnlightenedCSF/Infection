@@ -16,11 +16,14 @@ public class Player {
 
     private boolean wasDefeated;
     private boolean wasLocked;
+    private boolean hasWon;
 
     public Player(PieceColor color) {
         score = 0;
         this.color = color;
         wasDefeated = false;
+        hasWon = false;
+        wasLocked = false;
     }
 
     public int getScore() {
@@ -49,5 +52,13 @@ public class Player {
 
     public void setLock(boolean wasLocked) {
         this.wasLocked = wasLocked;
+    }
+
+    public boolean hasWon() {
+        return hasWon;
+    }
+
+    public void setHasWon(boolean hasWon) {
+        this.hasWon = hasWon;
     }
 }

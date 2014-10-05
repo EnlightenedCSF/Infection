@@ -1,10 +1,13 @@
 package ru.vsu.csf.enlightened.Renderers;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import ru.vsu.csf.enlightened.GameObjects.Board.Board;
 import ru.vsu.csf.enlightened.GameObjects.Board.BoardCell;
+import ru.vsu.csf.enlightened.GameObjects.Game;
 
 /** Created by enlightenedcsf on 02.10.14. */
 public class BoardRenderer {
@@ -18,9 +21,7 @@ public class BoardRenderer {
     Texture pieceRed, pieceBlue, pieceGreen, piecePurple, pieceYellow, pieceSelected;
     Texture tile;
     Texture selectionMark;
-
-    //private int cellX = -1, cellY = -1;
-
+    BitmapFont font;
     Batch batch = new SpriteBatch();
 
     public BoardRenderer(Board board) {
@@ -38,6 +39,9 @@ public class BoardRenderer {
         pieceSelected = new Texture("pieceSelected.png");
         tile = new Texture("tile.png");
         selectionMark = new Texture("selectionMark.png");
+        font = new BitmapFont() {{
+            setColor(Color.NAVY);
+        }};
     }
 
 
@@ -93,6 +97,8 @@ public class BoardRenderer {
                     CELL_SIZE - 4,
                     CELL_SIZE - 4);
         }
+
+
 
         batch.end();
     }

@@ -72,6 +72,11 @@ public class UIRenderer {
             }
 
             font.draw(batch, player.getScore()+"", MARGIN_LEFT + PLAYER_ICON_SIZE + 5, 480 - MARGIN_TOP - i*(PLAYER_ICON_SIZE) + 20);
+
+            if (Game.getGame().hasEnded()) {
+                font.draw(batch, "The " + Game.getGame().getCurrentPlayer().getColor() + " has won!", MARGIN_LEFT + 100, 480 - MARGIN_TOP);
+                font.draw(batch, "Press any key to return to the Main Menu", MARGIN_LEFT + 100, 480 - MARGIN_TOP - 30);
+            }
         }
         batch.end();
     }

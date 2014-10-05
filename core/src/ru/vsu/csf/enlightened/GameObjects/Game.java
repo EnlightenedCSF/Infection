@@ -57,7 +57,25 @@ public class Game {
         return players;
     }
 
+    public Player getPlayerByColor(PieceColor color) {
+        for (Player player : players) {
+            if (player.getColor() == color)
+                return player;
+        }
+        return  null;
+    }
+
+    public boolean hasEnded() {
+        for (Player player : players) {
+            if (player.hasWon())
+                return true;
+        }
+        return false;
+    }
+
     public void passTurn() {
+        if (currentPlayer.hasWon())
+            return;
 
         do {
             if (currentPlayerIndex == players.size() - 1)

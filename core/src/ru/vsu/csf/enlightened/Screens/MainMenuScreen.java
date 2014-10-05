@@ -11,9 +11,7 @@ import ru.vsu.csf.enlightened.GameObjects.Board.BoardCell;
 import ru.vsu.csf.enlightened.GameObjects.Piece.Piece;
 import ru.vsu.csf.enlightened.GameObjects.Piece.PieceColor;
 
-/**
- * Created by enlightenedcsf on 02.10.14.
- */
+/** Created by enlightenedcsf on 02.10.14. */
 public class MainMenuScreen extends InfectionScreen {
 
     String TAG = "screen";
@@ -70,8 +68,6 @@ public class MainMenuScreen extends InfectionScreen {
                     t[0][1].setPiece(new Piece(PieceColor.RED));
                     t[4][3].setPiece(new Piece(PieceColor.BLUE));
                     t[3][4].setPiece(new Piece(PieceColor.BLUE));
-                    t[4][4].setPiece(new Piece(PieceColor.BLUE));
-                    t[2][2].setPiece(new Piece(PieceColor.GREEN));
 
                     board.setCells(t);
                     board.saveToFile("save.igs");
@@ -112,75 +108,5 @@ public class MainMenuScreen extends InfectionScreen {
         creditsBtn.draw(batch);
         exitBtn.draw(batch);
         batch.end();
-
-        /*if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)){
-            float x = InfectionScreen.W - Gdx.input.getX();
-            float y = InfectionScreen.H - Gdx.input.getY();
-
-
-            if (isPointerInButton(x, y, newGameBtn)) {
-                game.setScreen(new GameScreen(game));
-
-            }
-
-            if (isPointerInButton(x, y, multiplayerBtn))
-            {
-
-            }
-
-            if (isPointerInButton(x, y, optionsBtn))
-            {
-                Board board = new Board();
-                board.init("save.igs");
-            }
-
-            if (isPointerInButton(x, y, exitBtn))
-                Gdx.app.exit();
-        }*/
     }
-
-
-    /*@Override
-    public boolean keyDown(int keycode) {
-        return false;
-    }
-
-    @Override
-    public boolean keyUp(int keycode) {
-        return false;
-    }
-
-    @Override
-    public boolean keyTyped(char character) {
-        return false;
-    }
-
-    @Override
-    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        if (isPointerInButton(Gdx.input.getX(), Gdx.input.getY(), newGameBtn)) {
-            game.setScreen(new GameScreen(game));
-            return true;
-        }
-        return false;
-    }
-
-    @Override
-    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        return false;
-    }
-
-    @Override
-    public boolean touchDragged(int screenX, int screenY, int pointer) {
-        return false;
-    }
-
-    @Override
-    public boolean mouseMoved(int screenX, int screenY) {
-        return false;
-    }
-
-    @Override
-    public boolean scrolled(int amount) {
-        return false;
-    }*/
 }
