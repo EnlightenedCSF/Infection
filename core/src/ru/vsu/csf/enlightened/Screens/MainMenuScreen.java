@@ -6,12 +6,10 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.utils.Logger;
-import ru.vsu.csf.enlightened.GameObjects.Board;
-import ru.vsu.csf.enlightened.GameObjects.BoardCell;
-import ru.vsu.csf.enlightened.GameObjects.Piece;
-import ru.vsu.csf.enlightened.GameObjects.PieceColor;
+import ru.vsu.csf.enlightened.GameObjects.Board.Board;
+import ru.vsu.csf.enlightened.GameObjects.Board.BoardCell;
+import ru.vsu.csf.enlightened.GameObjects.Piece.Piece;
+import ru.vsu.csf.enlightened.GameObjects.Piece.PieceColor;
 
 /**
  * Created by enlightenedcsf on 02.10.14.

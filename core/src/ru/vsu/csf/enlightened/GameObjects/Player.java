@@ -1,5 +1,7 @@
 package ru.vsu.csf.enlightened.GameObjects;
 
+import ru.vsu.csf.enlightened.GameObjects.Piece.PieceColor;
+
 /**
  * Класс игрока
  */
@@ -13,6 +15,7 @@ public class Player {
     private PieceColor color;
 
     private boolean wasDefeated;
+    private boolean wasLocked;
 
     public Player(PieceColor color) {
         score = 0;
@@ -38,5 +41,13 @@ public class Player {
 
     public boolean wasDefeated() {
         return wasDefeated;
+    }
+
+    public boolean wasLocked() {
+        return wasLocked;
+    }
+
+    public void setLock(boolean wasLocked) {
+        this.wasLocked = wasLocked;
     }
 }

@@ -3,8 +3,8 @@ package ru.vsu.csf.enlightened.Renderers;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import ru.vsu.csf.enlightened.GameObjects.Board;
-import ru.vsu.csf.enlightened.GameObjects.BoardCell;
+import ru.vsu.csf.enlightened.GameObjects.Board.Board;
+import ru.vsu.csf.enlightened.GameObjects.Board.BoardCell;
 
 /** Created by enlightenedcsf on 02.10.14. */
 public class BoardRenderer {

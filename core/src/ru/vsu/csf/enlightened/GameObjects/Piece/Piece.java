@@ -1,4 +1,4 @@
-package ru.vsu.csf.enlightened.GameObjects;
+package ru.vsu.csf.enlightened.GameObjects.Piece;
 
 /**
  * Класс фишки

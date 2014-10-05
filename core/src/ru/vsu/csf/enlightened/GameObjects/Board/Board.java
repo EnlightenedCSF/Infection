@@ -1,6 +1,9 @@
-package ru.vsu.csf.enlightened.GameObjects;
+package ru.vsu.csf.enlightened.GameObjects.Board;
 
 import com.badlogic.gdx.Gdx;
+import ru.vsu.csf.enlightened.GameObjects.*;
+import ru.vsu.csf.enlightened.GameObjects.Piece.Piece;
+import ru.vsu.csf.enlightened.GameObjects.Piece.PieceColor;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -19,13 +22,16 @@ public class Board {
     private Point selectedPiecePosition;
 
     private static Point[] neighbours;
+    private static Point[] farNeighbours;
     private HashMap<PieceColor, Integer> scores;
+    private HashMap<PieceColor, Boolean> locks;
 
     public Board() {
         hasSelectedPiece = false;
         selectedCell = new Point(-1, -1);
         selectedPiecePosition = new Point(-1, -1);
         scores = new HashMap<PieceColor, Integer>();
+        locks = new HashMap<PieceColor, Boolean>();
 
         neighbours = new Point[8];
         neighbours[0] = new Point(-1, -1);
@@ -36,6 +42,27 @@ public class Board {
         neighbours[5] = new Point(1, 0);
         neighbours[6] = new Point(1, 1);
         neighbours[7] = new Point(0, 1);
+
+        farNeighbours = new Point[16];
+        farNeighbours[0] = new Point(-2, -2);
+        farNeighbours[1] = new Point(-2, -1);
+        farNeighbours[2] = new Point(-2, -0);
+        farNeighbours[3] = new Point(-2, 1);
+
+        farNeighbours[4] = new Point(-2, 2);
+        farNeighbours[5] = new Point(-1, 2);
+        farNeighbours[6] = new Point(0, 2);
+        farNeighbours[7] = new Point(1, 2);
+
+        farNeighbours[8] = new Point(2, 2);
+        farNeighbours[9] = new Point(2, 1);
+        farNeighbours[10] = new Point(2, 0);
+        farNeighbours[11] = new Point(2, -1);
+
+        farNeighbours[12] = new Point(2, -2);
+        farNeighbours[13] = new Point(1, -2);
+        farNeighbours[14] = new Point(0, -2);
+        farNeighbours[15] = new Point(-1, -2);
     }
 
     public BoardCell[][] getCells() {
@@ -93,6 +120,7 @@ public class Board {
                     Game.getGame().addPlayer(color);
                     colors.add(color);
                     scores.put(color, 0);
+                    locks.put(color, false);
                 }
 
                 if (scores.containsKey(color)) {
@@ -225,11 +253,14 @@ public class Board {
 
         scores.put(currentPlayer.getColor(), playerCount);
 
-        for (PieceColor color : scores.keySet()) {
-            Gdx.app.log("scores", color + " " + scores.get(color)+"");
-        }
-
         checkIfDefeat();
+        checkIfVictory();
+        checkIfLocked();
+    }
+
+
+    private void checkIfVictory() {
+
     }
 
     private void checkIfDefeat() {
@@ -246,12 +277,74 @@ public class Board {
     }
 
 
+    private void checkIfLocked() {
+        ArrayList<Player> players = Game.getGame().getPlayers();
+        for (PieceColor color : locks.keySet()) {
+            locks.put(color, true);
+        }
+
+        for (Player player : players) {
+            boolean OK = false;
+
+            if (player.wasDefeated())
+                continue;
+
+            for (int j = 0; j < cells[0].length; j++) {
+                if (OK)
+                    break;
+
+                for (int i = 0; i < cells.length; i++) {
+                    if (OK)
+                        break;
+
+                    if (!cells[i][j].isEmpty() && cells[i][j].getPiece() != null && cells[i][j].getPiece().getColor() == player.getColor()) {
+
+                        int x, y;
+
+                        for (Point p : neighbours) {
+                            x = i + p.getX();
+                            y = j + p.getY();
+
+                            //TODO: вынести checkIsAbsoluteEmpty в метод
+                            if (x >= 0 && x < cells.length && y >= 0 && y < cells[0].length && !cells[x][y].isEmpty() && cells[x][y].getPiece() == null)
+                            {
+                                OK = true;
+                                break;
+                            }
+                        }
+
+                        for (Point p : farNeighbours) {
+                            x = i + p.getX();
+                            y = j + p.getY();
+
+                            if (x >= 0 && x < cells.length && y >= 0 && y < cells[0].length && !cells[x][y].isEmpty() && cells[x][y].getPiece() == null)
+                            {
+                                OK = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (OK)
+                locks.put(player.getColor(), false);
+
+            Gdx.app.log("lock", "The lock on the " + player.getColor() + " is " + !OK);
+        }
+
+        for (Player player : players) {
+            player.setLock(locks.get(player.getColor()));
+        }
+    }
+
+
     private int getDistance(int x1, int y1, int x2, int y2) {
         return Math.max(Math.abs(x1 - x2), Math.abs(y1 - y2));
     }
 
-    public void click() {
 
+    public void click() {
         Piece piece = cells[selectedCell.getX()][selectedCell.getY()].getPiece();
         if (piece != null && piece.getColor() == Game.getGame().getCurrentPlayer().getColor()) {
             hasSelectedPiece = true;

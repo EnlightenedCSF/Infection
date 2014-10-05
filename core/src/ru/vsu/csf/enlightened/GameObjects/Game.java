@@ -1,5 +1,8 @@
 package ru.vsu.csf.enlightened.GameObjects;
 
+import ru.vsu.csf.enlightened.GameObjects.Board.Board;
+import ru.vsu.csf.enlightened.GameObjects.Piece.PieceColor;
+
 import java.util.ArrayList;
 
 /**
@@ -62,7 +65,7 @@ public class Game {
             else
                 currentPlayerIndex++;
         }
-        while (players.get(currentPlayerIndex).wasDefeated());
+        while (players.get(currentPlayerIndex).wasDefeated() || players.get(currentPlayerIndex).wasLocked());
 
         currentPlayer = players.get(currentPlayerIndex);
     }

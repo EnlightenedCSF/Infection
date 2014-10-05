@@ -2,12 +2,9 @@ package ru.vsu.csf.enlightened.Screens;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.GL20;
-import ru.vsu.csf.enlightened.GameObjects.Board;
-import ru.vsu.csf.enlightened.GameObjects.PieceColor;
-import ru.vsu.csf.enlightened.GameObjects.Player;
+import ru.vsu.csf.enlightened.GameObjects.Board.Board;
 import ru.vsu.csf.enlightened.Renderers.BoardRenderer;
 import ru.vsu.csf.enlightened.Renderers.UIRenderer;
 
@@ -40,7 +37,6 @@ public class GameScreen extends InfectionScreen {
             @Override
             public boolean mouseMoved(int screenX, int screenY) {
                 screenY = 480 - screenY;
-
                 boardRenderer.setSelectionPosition(screenX, screenY);
                 return true;
             }
