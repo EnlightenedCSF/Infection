@@ -18,8 +18,6 @@ public class UIRenderer {
     private static final int PLAYER_ICON_SIZE = 30;
 
     BitmapFont font;
-    Texture pieceRed, pieceBlue, pieceGreen, piecePurple, pieceYellow;
-    Texture selectionMark;
     Texture defeatMark;
     Batch batch;
 
@@ -28,13 +26,7 @@ public class UIRenderer {
         font = new BitmapFont() {{
             setColor(Color.GRAY);
         }};
-        pieceRed = new Texture("pieceRed.png");
-        pieceBlue = new Texture("pieceBlue.png");
-        pieceGreen = new Texture("pieceGreen.png");
-        piecePurple = new Texture("piecePurple.png");
-        pieceYellow = new Texture("pieceYellow.png");
-        selectionMark = new Texture("selectionMark.png");
-        defeatMark = new Texture("defeatMark.png");
+        defeatMark = new Texture("assets/defeatMark.png");
     }
 
     public void render() {
@@ -46,24 +38,24 @@ public class UIRenderer {
             i++;
 
             if (Game.getGame().getCurrentPlayer() == player) {
-                batch.draw(selectionMark, MARGIN_LEFT, 480 - MARGIN_TOP - i*(PLAYER_ICON_SIZE + 5), PLAYER_ICON_SIZE, PLAYER_ICON_SIZE);
+                batch.draw(BoardRenderer.selectionMark, MARGIN_LEFT, 480 - MARGIN_TOP - i*(PLAYER_ICON_SIZE + 5), PLAYER_ICON_SIZE, PLAYER_ICON_SIZE);
             }
 
             switch (player.getColor()) {
                 case RED:
-                    batch.draw(pieceRed, MARGIN_LEFT, 480 - MARGIN_TOP - i*(PLAYER_ICON_SIZE + 5), PLAYER_ICON_SIZE, PLAYER_ICON_SIZE);
+                    batch.draw(BoardRenderer.pieceRed, MARGIN_LEFT, 480 - MARGIN_TOP - i*(PLAYER_ICON_SIZE + 5), PLAYER_ICON_SIZE, PLAYER_ICON_SIZE);
                     break;
                 case GREEN:
-                    batch.draw(pieceGreen, MARGIN_LEFT, 480 - MARGIN_TOP - i*(PLAYER_ICON_SIZE + 5), PLAYER_ICON_SIZE, PLAYER_ICON_SIZE);
+                    batch.draw(BoardRenderer.pieceGreen, MARGIN_LEFT, 480 - MARGIN_TOP - i*(PLAYER_ICON_SIZE + 5), PLAYER_ICON_SIZE, PLAYER_ICON_SIZE);
                     break;
                 case PURPLE:
-                    batch.draw(piecePurple, MARGIN_LEFT, 480 - MARGIN_TOP - i*(PLAYER_ICON_SIZE + 5), PLAYER_ICON_SIZE, PLAYER_ICON_SIZE);
+                    batch.draw(BoardRenderer.piecePurple, MARGIN_LEFT, 480 - MARGIN_TOP - i*(PLAYER_ICON_SIZE + 5), PLAYER_ICON_SIZE, PLAYER_ICON_SIZE);
                     break;
                 case YELLOW:
-                    batch.draw(pieceYellow, MARGIN_LEFT, 480 - MARGIN_TOP - i*(PLAYER_ICON_SIZE + 5), PLAYER_ICON_SIZE, PLAYER_ICON_SIZE);
+                    batch.draw(BoardRenderer.pieceYellow, MARGIN_LEFT, 480 - MARGIN_TOP - i*(PLAYER_ICON_SIZE + 5), PLAYER_ICON_SIZE, PLAYER_ICON_SIZE);
                     break;
                 case BLUE:
-                    batch.draw(pieceBlue, MARGIN_LEFT, 480 - MARGIN_TOP - i*(PLAYER_ICON_SIZE + 5), PLAYER_ICON_SIZE, PLAYER_ICON_SIZE);
+                    batch.draw(BoardRenderer.pieceBlue, MARGIN_LEFT, 480 - MARGIN_TOP - i*(PLAYER_ICON_SIZE + 5), PLAYER_ICON_SIZE, PLAYER_ICON_SIZE);
                     break;
             }
 

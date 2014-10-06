@@ -79,11 +79,11 @@ public class MainMenuScreen extends InfectionScreen {
     }
 
     private void loadAssets(){
-        newGameBtn = new Sprite(new Texture(Gdx.files.internal("newGame.png")));
-        multiplayerBtn = new Sprite(new Texture(Gdx.files.internal("multiplayer.png")));
-        optionsBtn = new Sprite(new Texture(Gdx.files.internal("options.png")));
-        creditsBtn = new Sprite(new Texture(Gdx.files.internal("credits.png")));
-        exitBtn = new Sprite(new Texture(Gdx.files.internal("exit.png")));
+        newGameBtn = new Sprite(new Texture(Gdx.files.internal("assets/newGame.png")));
+        multiplayerBtn = new Sprite(new Texture(Gdx.files.internal("assets/multiplayer.png")));
+        optionsBtn = new Sprite(new Texture(Gdx.files.internal("assets/options.png")));
+        creditsBtn = new Sprite(new Texture(Gdx.files.internal("assets/credits.png")));
+        exitBtn = new Sprite(new Texture(Gdx.files.internal("assets/exit.png")));
 
         float widthCenter = InfectionScreen.W/2;
         float height = 440;

@@ -1,9 +1,9 @@
 package ru.vsu.csf.enlightened.GameObjects.Board;
 
-import com.badlogic.gdx.Gdx;
-import ru.vsu.csf.enlightened.GameObjects.*;
+import ru.vsu.csf.enlightened.GameObjects.Game;
 import ru.vsu.csf.enlightened.GameObjects.Piece.Piece;
 import ru.vsu.csf.enlightened.GameObjects.Piece.PieceColor;
+import ru.vsu.csf.enlightened.GameObjects.Player;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -81,14 +81,6 @@ public class Board {
 
     public Point getSelectedPiecePosition() {
         return selectedPiecePosition;
-    }
-
-    public void setSelectedPiecePosition(Point selectedPiecePosition) {
-        this.selectedPiecePosition = selectedPiecePosition;
-    }
-
-    public void setSelectedCell(Point selectedCell) {
-        this.selectedCell = selectedCell;
     }
 
     public boolean hasSelectedPiece() {
@@ -171,7 +163,7 @@ public class Board {
                 writer.write('\n');
             }
 
-            String pieceInfo = "";
+            String pieceInfo;
             for (int j = 0; j < cells[0].length; j++) {
                 for (int i = 0; i < cells.length; i++) {
                     if (!cells[i][j].isEmpty() && cells[i][j].getPiece() != null) {
@@ -370,8 +362,6 @@ public class Board {
 
             if (OK)
                 locks.put(player.getColor(), false);
-
-            //Gdx.app.log("lock", "The lock on the " + player.getColor() + " is " + !OK);
         }
 
         for (Player player : players) {
@@ -385,7 +375,9 @@ public class Board {
     }
 
 
-    public void click() {
+    public boolean click() {
+        boolean result = false;
+
         Piece piece = cells[selectedCell.getX()][selectedCell.getY()].getPiece();
         if (piece != null && piece.getColor() == Game.getGame().getCurrentPlayer().getColor()) {
             hasSelectedPiece = true;
@@ -400,11 +392,13 @@ public class Board {
                     cells[selectedCell.getX()][selectedCell.getY()].getPiece() == null) {
 
                 makeMove(selectedPiecePosition, selectedCell);
+                result = true;
             }
 
             hasSelectedPiece = false;
             selectedPiecePosition.setX(-1);
             selectedPiecePosition.setY(-1);
         }
+        return result;
     }
 }

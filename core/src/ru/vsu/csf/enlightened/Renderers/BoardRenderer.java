@@ -1,47 +1,50 @@
 package ru.vsu.csf.enlightened.Renderers;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import ru.vsu.csf.enlightened.GameObjects.Board.Board;
 import ru.vsu.csf.enlightened.GameObjects.Board.BoardCell;
-import ru.vsu.csf.enlightened.GameObjects.Game;
 
 /** Created by enlightenedcsf on 02.10.14. */
 public class BoardRenderer {
 
-    private static final float MARGIN_TOP   = 70;
-    private static final float MARGIN_LEFT  = 100;
-    private static final float CELL_SIZE    = 50;
+    static final float MARGIN_TOP   = 70;
+    static final float MARGIN_LEFT  = 100;
+    static final float CELL_SIZE    = 50;
 
+    static Texture pieceRed, pieceBlue, pieceGreen, piecePurple, pieceYellow, pieceSelected;
+    static Texture selectionMark;
 
-    Board board;
-    Texture pieceRed, pieceBlue, pieceGreen, piecePurple, pieceYellow, pieceSelected;
-    Texture tile;
-    Texture selectionMark;
-    BitmapFont font;
-    Batch batch = new SpriteBatch();
+    private Board board;
+    private Texture tile;
+    private Batch batch = new SpriteBatch();
+
+    private PieceAnimator animator;
+
+    public boolean isAnimating() {
+        return animator.isInProgress();
+    }
+
+    public PieceAnimator getAnimator() {
+        return animator;
+    }
 
     public BoardRenderer(Board board) {
         this.board = board;
-
+        animator = new PieceAnimator(board);
         loadAssets();
     }
 
     public void loadAssets() {
-        pieceRed = new Texture("pieceRed.png");
-        pieceBlue = new Texture("pieceBlue.png");
-        pieceGreen = new Texture("pieceGreen.png");
-        piecePurple = new Texture("piecePurple.png");
-        pieceYellow = new Texture("pieceYellow.png");
-        pieceSelected = new Texture("pieceSelected.png");
-        tile = new Texture("tile.png");
-        selectionMark = new Texture("selectionMark.png");
-        font = new BitmapFont() {{
-            setColor(Color.NAVY);
-        }};
+        pieceRed = new Texture("assets/pieceRed.png");
+        pieceBlue = new Texture("assets/pieceBlue.png");
+        pieceGreen = new Texture("assets/pieceGreen.png");
+        piecePurple = new Texture("assets/piecePurple.png");
+        pieceYellow = new Texture("assets/pieceYellow.png");
+        pieceSelected = new Texture("assets/pieceSelected.png");
+        tile = new Texture("assets/tile.png");
+        selectionMark = new Texture("assets/selectionMark.png");
     }
 
 
@@ -92,13 +95,11 @@ public class BoardRenderer {
         }
 
         if (board.hasSelectedPiece()) {
-            batch.draw(pieceSelected, MARGIN_LEFT + board.getSelectedPiecePosition().getX()*CELL_SIZE + 4,
-                    MARGIN_TOP + board.getSelectedPiecePosition().getY()*CELL_SIZE + 4,
+            batch.draw(pieceSelected, MARGIN_LEFT + board.getSelectedPiecePosition().getX() *CELL_SIZE + 4,
+                    MARGIN_TOP + board.getSelectedPiecePosition().getY() *CELL_SIZE + 4,
                     CELL_SIZE - 4,
                     CELL_SIZE - 4);
         }
-
-
 
         batch.end();
     }
@@ -109,6 +110,6 @@ public class BoardRenderer {
         y -= MARGIN_TOP;
 
         board.getSelectedCell().setX((int) (x / CELL_SIZE));
-        board.getSelectedCell().setY((int)(y / CELL_SIZE));
+        board.getSelectedCell().setY((int) (y / CELL_SIZE));
     }
 }

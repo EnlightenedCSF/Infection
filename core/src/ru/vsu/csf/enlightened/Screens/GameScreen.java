@@ -11,10 +11,9 @@ import ru.vsu.csf.enlightened.Renderers.UIRenderer;
 /** Created by enlightenedcsf on 02.10.14. */
 public class GameScreen extends InfectionScreen {
 
-    Board board;
-    BoardRenderer boardRenderer;
-    UIRenderer uiRenderer;
-    ru.vsu.csf.enlightened.GameObjects.Game myGame = ru.vsu.csf.enlightened.GameObjects.Game.getGame();
+    private Board board;
+    private BoardRenderer boardRenderer;
+    private UIRenderer uiRenderer;
 
     public GameScreen(Game game) {
         super(game);
@@ -22,7 +21,8 @@ public class GameScreen extends InfectionScreen {
 
     @Override
     public void show() {
-        board = new Board();
+        ru.vsu.csf.enlightened.GameObjects.Game.getGame().setBoard(new Board());
+        board = ru.vsu.csf.enlightened.GameObjects.Game.getGame().getBoard();
         board.init("save.igs");
         boardRenderer = new BoardRenderer(board);
         uiRenderer = new UIRenderer();
@@ -30,8 +30,12 @@ public class GameScreen extends InfectionScreen {
         Gdx.input.setInputProcessor(new InputAdapter(){
             @Override
             public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-                if (!ru.vsu.csf.enlightened.GameObjects.Game.getGame().hasEnded())
-                    board.click();
+                if (ru.vsu.csf.enlightened.GameObjects.Game.getGame().hasEnded() || boardRenderer.isAnimating())
+                    return false;
+
+                if (board.click()) {
+                    boardRenderer.getAnimator().init();
+                }
                 return true;
             }
 

@@ -32,7 +32,7 @@ public class IntroScreen extends InfectionScreen {
         batch = new SpriteBatch();
         batch.getProjectionMatrix().setToOrtho2D(0, 0, 600, 480);
 
-        bg = new Texture(Gdx.files.internal("spaceship.png"));
+        bg = new Texture(Gdx.files.internal("assets/spaceship.png"));
         bgSprite = new Sprite(bg);
         bgSprite.setPosition(InfectionScreen.W/2 - bgSprite.getWidth()/2, InfectionScreen.H/2 - bgSprite.getHeight()/2);
 
