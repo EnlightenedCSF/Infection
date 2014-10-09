@@ -1,18 +1,17 @@
-package ru.vsu.csf.enlightened.Renderers;
+package ru.vsu.csf.enlightened.Renderers.animators;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import ru.vsu.csf.enlightened.GameObjects.Board.Board;
 import ru.vsu.csf.enlightened.GameObjects.Board.FloatPoint;
 import ru.vsu.csf.enlightened.GameObjects.Board.Point;
 import ru.vsu.csf.enlightened.GameObjects.Game;
+import ru.vsu.csf.enlightened.Renderers.BoardRenderer;
 
 /** Created by enlightenedcsf on 06.10.14. */
-public class PieceMoveAnimator {
+public class PieceMoveAnimator extends Animator {
 
     private static final double SPEED = 4;
     private static final double EPS   = 3;
-
-    private Board board;
 
     private FloatPoint position;
     private FloatPoint destination;
@@ -22,14 +21,15 @@ public class PieceMoveAnimator {
     private double speedY;
 
     public PieceMoveAnimator(Board board) {
-        this.board = board;
-        inProgress = false;
+        super(board);
     }
 
+    @Override
     public boolean isInProgress() {
         return inProgress;
     }
 
+    @Override
     public void init() {
         position = new FloatPoint() {{
             setX(BoardRenderer.MARGIN_LEFT + board.getSelectedPiecePosition().getX()*BoardRenderer.PIECE_SIZE + 4);
@@ -52,6 +52,7 @@ public class PieceMoveAnimator {
         return Math.sqrt((self.getX() - target.getX())*(self.getX() - target.getX()) + (self.getY() - target.getY())*(self.getY() - target.getY()));
     }
 
+    @Override
     public void render(Batch batch) {
         if (getDistance(position, destination) > EPS) {
             position.setX((float) (position.getX() + speedX));

@@ -210,13 +210,8 @@ public class Board {
 
         PieceColor currentColor = Game.getGame().getCurrentPlayer().getColor();
 
-        //cells[to.getX()][to.getY()].setPiece(new Piece(currentColor));
         deployPoint = new Point(to.getX(), to.getY());
         deployColor = currentColor;
-
-        //Gdx.app.log("board", "from: " + selectedPiecePosition.getX()+" "+selectedPiecePosition.getY());
-        //Gdx.app.log("board", "to: " + deployPoint.getX()+" "+deployPoint.getY());
-        //Gdx.app.log("board", deployColor.toString());
 
         Integer count = scores.get(currentColor);
         count++;
@@ -229,8 +224,6 @@ public class Board {
             freeCells++;
         }
         scores.put(currentColor, count);
-
-        //Game.getGame().passTurn();
     }
 
 

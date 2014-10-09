@@ -33,7 +33,8 @@ public class GameScreen extends InfectionScreen {
                     return false;
 
                 if (board.click()) {
-                    boardRenderer.getAnimator().init();
+                    boardRenderer.getMoveAnimator().init();
+                    boardRenderer.getInfectAnimator().init();
                 }
                 return true;
             }

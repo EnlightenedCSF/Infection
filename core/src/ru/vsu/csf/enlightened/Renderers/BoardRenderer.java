@@ -7,37 +7,46 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import ru.vsu.csf.enlightened.GameObjects.Board.Board;
 import ru.vsu.csf.enlightened.GameObjects.Board.BoardCell;
+import ru.vsu.csf.enlightened.Renderers.animators.PieceInfectAnimator;
+import ru.vsu.csf.enlightened.Renderers.animators.PieceMoveAnimator;
 
 /** Created by enlightenedcsf on 02.10.14. */
 public class BoardRenderer {
 
     private static final boolean DRAW_CELL_INDEXES = false;
 
-    static final float MARGIN_TOP   = 70;
-    static final float MARGIN_LEFT  = 100;
-    static final float CELL_SIZE    = 50;
-    static final float PIECE_SIZE   = 46;
+    public static final float MARGIN_TOP   = 70;
+    public static final float MARGIN_LEFT  = 100;
+    public static final float CELL_SIZE    = 50;
+    public static final float PIECE_SIZE   = 46;
 
-    static Texture pieceRed, pieceBlue, pieceGreen, piecePurple, pieceYellow, pieceSelected;
-    static Texture selectionMark;
+    public static Texture pieceRed, pieceBlue, pieceGreen, piecePurple, pieceYellow, pieceSelected;
+    public static Texture selectionMark;
+    public static Texture tile;
 
     private Board board;
-    private Texture tile;
+
     private Batch batch = new SpriteBatch();
 
-    private PieceMoveAnimator animator;
+    private PieceMoveAnimator moveAnimator;
+    private PieceInfectAnimator infectAnimator;
 
     public boolean isAnimating() {
-        return animator.isInProgress();
+        return moveAnimator.isInProgress();
     }
 
-    public PieceMoveAnimator getAnimator() {
-        return animator;
+    public PieceMoveAnimator getMoveAnimator() {
+        return moveAnimator;
+    }
+
+    public PieceInfectAnimator getInfectAnimator() {
+        return infectAnimator;
     }
 
     public BoardRenderer(Board board) {
         this.board = board;
-        animator = new PieceMoveAnimator(board);
+        moveAnimator = new PieceMoveAnimator(board);
+        infectAnimator = new PieceInfectAnimator(board);
         loadAssets();
     }
 
@@ -54,9 +63,31 @@ public class BoardRenderer {
 
 
     public void render() {
-        BoardCell[][] cells = board.getCells();
-
         batch.begin();
+        batch.setColor(1, 1, 1, 1);
+
+        drawField();
+
+        if (DRAW_CELL_INDEXES) {
+            drawIndexes();
+        }
+
+        drawSelectedCell();
+        drawSelectedPiece();
+
+        if (moveAnimator.isInProgress())
+            moveAnimator.render(batch);
+
+
+        if (infectAnimator.isInProgress())
+            infectAnimator.render(batch);
+
+        batch.end();
+    }
+
+
+    private void drawField() {
+        BoardCell[][] cells = board.getCells();
 
         for (int j = 0; j < cells[0].length; j++) {
             for (int i = 0; i < cells.length; i++) {
@@ -85,20 +116,25 @@ public class BoardRenderer {
                 }
             }
         }
+    }
 
-        if (DRAW_CELL_INDEXES) {
-            BitmapFont font = new BitmapFont() {{
-                setColor(Color.GREEN);
-            }};
-            for (int j = 0; j < cells[0].length; j++) {
-                for (int i = 0; i < cells.length; i++) {
-                    if (!cells[i][j].isEmpty()) {
-                        font.draw(batch, i + " " + j, MARGIN_LEFT + i * CELL_SIZE + 10, MARGIN_TOP + j * CELL_SIZE + 4);
-                    }
+    private void drawIndexes() {
+        BoardCell[][] cells = board.getCells();
+
+        BitmapFont font = new BitmapFont() {{
+            setColor(Color.GREEN);
+        }};
+        for (int j = 0; j < cells[0].length; j++) {
+            for (int i = 0; i < cells.length; i++) {
+                if (!cells[i][j].isEmpty()) {
+                    font.draw(batch, i + " " + j, MARGIN_LEFT + i * CELL_SIZE + 10, MARGIN_TOP + j * CELL_SIZE + 4);
                 }
             }
         }
+    }
 
+    private void drawSelectedCell() {
+        BoardCell[][] cells = board.getCells();
 
         int cellX = board.getSelectedCell().getX();
         int cellY = board.getSelectedCell().getY();
@@ -112,20 +148,16 @@ public class BoardRenderer {
                     CELL_SIZE - 2,
                     CELL_SIZE - 2);
         }
+    }
 
+    private void drawSelectedPiece() {
         if (board.hasSelectedPiece()) {
             batch.draw(pieceSelected, MARGIN_LEFT + board.getSelectedPiecePosition().getX() *CELL_SIZE + 4,
                     MARGIN_TOP + board.getSelectedPiecePosition().getY() *CELL_SIZE + 4,
                     CELL_SIZE - 4,
                     CELL_SIZE - 4);
         }
-
-        if (animator.isInProgress())
-            animator.render(batch);
-
-        batch.end();
     }
-
 
     public void setSelectionPosition(int x, int y) {
         x -= MARGIN_LEFT;
