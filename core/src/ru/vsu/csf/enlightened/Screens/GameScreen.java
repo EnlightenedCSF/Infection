@@ -21,9 +21,8 @@ public class GameScreen extends InfectionScreen {
 
     @Override
     public void show() {
-        ru.vsu.csf.enlightened.GameObjects.Game.getGame().setBoard(new Board());
+        ru.vsu.csf.enlightened.GameObjects.Game.getGame().startNewGame();
         board = ru.vsu.csf.enlightened.GameObjects.Game.getGame().getBoard();
-        board.init("save.igs");
         boardRenderer = new BoardRenderer(board);
         uiRenderer = new UIRenderer();
 

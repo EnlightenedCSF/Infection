@@ -65,6 +65,16 @@ public class Game {
         return  null;
     }
 
+    public void startNewGame() {
+        players = new ArrayList<Player>();
+        currentPlayer = null;
+        currentPlayerIndex = -1;
+
+        board = new Board() {{
+            init("save.igs");
+        }};
+    }
+
     public boolean hasEnded() {
         for (Player player : players) {
             if (player.hasWon())
@@ -72,6 +82,8 @@ public class Game {
         }
         return false;
     }
+
+
 
     public void passTurn() {
         if (currentPlayer.hasWon())

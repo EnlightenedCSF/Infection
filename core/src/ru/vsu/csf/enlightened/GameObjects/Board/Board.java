@@ -1,5 +1,6 @@
 package ru.vsu.csf.enlightened.GameObjects.Board;
 
+import com.badlogic.gdx.Gdx;
 import ru.vsu.csf.enlightened.GameObjects.Game;
 import ru.vsu.csf.enlightened.GameObjects.Piece.Piece;
 import ru.vsu.csf.enlightened.GameObjects.Piece.PieceColor;
@@ -21,8 +22,12 @@ public class Board {
     private Point selectedCell;
     private Point selectedPiecePosition;
 
+    private Point deployPoint;
+    private PieceColor deployColor;
+
     private static Point[] neighbours;
     private static Point[] farNeighbours;
+
     private HashMap<PieceColor, Integer> scores;
     private HashMap<PieceColor, Boolean> locks;
     private int freeCells;
@@ -30,6 +35,10 @@ public class Board {
     public Board() {
         hasSelectedPiece = false;
         selectedCell = new Point(-1, -1);
+
+        deployPoint = new Point(-1, -1);
+        deployColor = PieceColor.BLUE;
+
         selectedPiecePosition = new Point(-1, -1);
         scores = new HashMap<PieceColor, Integer>();
         locks = new HashMap<PieceColor, Boolean>();
@@ -87,6 +96,8 @@ public class Board {
         return hasSelectedPiece;
     }
 
+
+
     public void init(String path) {
         BufferedReader reader = null;
 
@@ -142,7 +153,6 @@ public class Board {
         }
     }
 
-
     public void saveToFile(String path) {
 
         BufferedWriter writer = null;
@@ -189,8 +199,6 @@ public class Board {
         }
     }
 
-
-
     /**
      * Метод, обрабатывающий ход
      * @param from Координаты выбранной фишки
@@ -201,7 +209,15 @@ public class Board {
                 selectedCell.getX(), selectedCell.getY());
 
         PieceColor currentColor = Game.getGame().getCurrentPlayer().getColor();
-        cells[to.getX()][to.getY()].setPiece(new Piece(currentColor));
+
+        //cells[to.getX()][to.getY()].setPiece(new Piece(currentColor));
+        deployPoint = new Point(to.getX(), to.getY());
+        deployColor = currentColor;
+
+        //Gdx.app.log("board", "from: " + selectedPiecePosition.getX()+" "+selectedPiecePosition.getY());
+        //Gdx.app.log("board", "to: " + deployPoint.getX()+" "+deployPoint.getY());
+        //Gdx.app.log("board", deployColor.toString());
+
         Integer count = scores.get(currentColor);
         count++;
         freeCells--;
@@ -214,9 +230,7 @@ public class Board {
         }
         scores.put(currentColor, count);
 
-        infect(to);
-
-        Game.getGame().passTurn();
+        //Game.getGame().passTurn();
     }
 
 
@@ -309,7 +323,6 @@ public class Board {
         }
     }
 
-
     private void checkIfLocked() {
         ArrayList<Player> players = Game.getGame().getPlayers();
         for (PieceColor color : locks.keySet()) {
@@ -369,7 +382,6 @@ public class Board {
         }
     }
 
-
     private int getDistance(int x1, int y1, int x2, int y2) {
         return Math.max(Math.abs(x1 - x2), Math.abs(y1 - y2));
     }
@@ -396,9 +408,17 @@ public class Board {
             }
 
             hasSelectedPiece = false;
-            selectedPiecePosition.setX(-1);
-            selectedPiecePosition.setY(-1);
         }
         return result;
+    }
+
+    public void deployPiece() {
+        cells[deployPoint.getX()][deployPoint.getY()].setPiece(new Piece(deployColor));
+
+        selectedPiecePosition.setX(-1);
+        selectedPiecePosition.setY(-1);
+
+        //todo: infect animation
+        infect(deployPoint);
     }
 }

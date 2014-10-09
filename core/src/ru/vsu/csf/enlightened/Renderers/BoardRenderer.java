@@ -1,7 +1,9 @@
 package ru.vsu.csf.enlightened.Renderers;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import ru.vsu.csf.enlightened.GameObjects.Board.Board;
 import ru.vsu.csf.enlightened.GameObjects.Board.BoardCell;
@@ -9,9 +11,12 @@ import ru.vsu.csf.enlightened.GameObjects.Board.BoardCell;
 /** Created by enlightenedcsf on 02.10.14. */
 public class BoardRenderer {
 
+    private static final boolean DRAW_CELL_INDEXES = false;
+
     static final float MARGIN_TOP   = 70;
     static final float MARGIN_LEFT  = 100;
     static final float CELL_SIZE    = 50;
+    static final float PIECE_SIZE   = 46;
 
     static Texture pieceRed, pieceBlue, pieceGreen, piecePurple, pieceYellow, pieceSelected;
     static Texture selectionMark;
@@ -20,19 +25,19 @@ public class BoardRenderer {
     private Texture tile;
     private Batch batch = new SpriteBatch();
 
-    private PieceAnimator animator;
+    private PieceMoveAnimator animator;
 
     public boolean isAnimating() {
         return animator.isInProgress();
     }
 
-    public PieceAnimator getAnimator() {
+    public PieceMoveAnimator getAnimator() {
         return animator;
     }
 
     public BoardRenderer(Board board) {
         this.board = board;
-        animator = new PieceAnimator(board);
+        animator = new PieceMoveAnimator(board);
         loadAssets();
     }
 
@@ -61,25 +66,39 @@ public class BoardRenderer {
                     if (cells[i][j].getPiece() != null) {
                         switch (cells[i][j].getPiece().getColor()) {
                             case RED:
-                                batch.draw(pieceRed, MARGIN_LEFT + i*CELL_SIZE + 4, MARGIN_TOP + j*CELL_SIZE + 4, CELL_SIZE - 4, CELL_SIZE - 4);
+                                batch.draw(pieceRed, MARGIN_LEFT + i*CELL_SIZE + 4, MARGIN_TOP + j*CELL_SIZE + 4, PIECE_SIZE, PIECE_SIZE);
                                 break;
                             case BLUE:
-                                batch.draw(pieceBlue, MARGIN_LEFT + i*CELL_SIZE + 4, MARGIN_TOP + j*CELL_SIZE + 4, CELL_SIZE - 4, CELL_SIZE - 4);
+                                batch.draw(pieceBlue, MARGIN_LEFT + i*CELL_SIZE + 4, MARGIN_TOP + j*CELL_SIZE + 4, PIECE_SIZE, PIECE_SIZE);
                                 break;
                             case GREEN:
-                                batch.draw(pieceGreen, MARGIN_LEFT + i*CELL_SIZE + 4, MARGIN_TOP + j*CELL_SIZE + 4, CELL_SIZE - 4, CELL_SIZE - 4);
+                                batch.draw(pieceGreen, MARGIN_LEFT + i*CELL_SIZE + 4, MARGIN_TOP + j*CELL_SIZE + 4, PIECE_SIZE, PIECE_SIZE);
                                 break;
                             case PURPLE:
-                                batch.draw(piecePurple, MARGIN_LEFT + i*CELL_SIZE + 4, MARGIN_TOP + j*CELL_SIZE + 4, CELL_SIZE - 4, CELL_SIZE - 4);
+                                batch.draw(piecePurple, MARGIN_LEFT + i*CELL_SIZE + 4, MARGIN_TOP + j*CELL_SIZE + 4, PIECE_SIZE, PIECE_SIZE);
                                 break;
                             case YELLOW:
-                                batch.draw(pieceYellow, MARGIN_LEFT + i*CELL_SIZE + 4, MARGIN_TOP + j*CELL_SIZE + 4, CELL_SIZE - 4, CELL_SIZE - 4);
+                                batch.draw(pieceYellow, MARGIN_LEFT + i*CELL_SIZE + 4, MARGIN_TOP + j*CELL_SIZE + 4, PIECE_SIZE, PIECE_SIZE);
                                 break;
                         }
                     }
                 }
             }
         }
+
+        if (DRAW_CELL_INDEXES) {
+            BitmapFont font = new BitmapFont() {{
+                setColor(Color.GREEN);
+            }};
+            for (int j = 0; j < cells[0].length; j++) {
+                for (int i = 0; i < cells.length; i++) {
+                    if (!cells[i][j].isEmpty()) {
+                        font.draw(batch, i + " " + j, MARGIN_LEFT + i * CELL_SIZE + 10, MARGIN_TOP + j * CELL_SIZE + 4);
+                    }
+                }
+            }
+        }
+
 
         int cellX = board.getSelectedCell().getX();
         int cellY = board.getSelectedCell().getY();
@@ -100,6 +119,9 @@ public class BoardRenderer {
                     CELL_SIZE - 4,
                     CELL_SIZE - 4);
         }
+
+        if (animator.isInProgress())
+            animator.render(batch);
 
         batch.end();
     }
