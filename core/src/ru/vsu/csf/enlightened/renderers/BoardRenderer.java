@@ -47,15 +47,15 @@ public class BoardRenderer {
 
     public void loadAssets() {
         pieces = new HashMap<PieceColor, Texture>();
-        pieces.put(PieceColor.RED,    new Texture("assets/pieceRed.png"));
-        pieces.put(PieceColor.BLUE,   new Texture("assets/pieceBlue.png"));
-        pieces.put(PieceColor.GREEN,  new Texture("assets/pieceGreen.png"));
-        pieces.put(PieceColor.YELLOW, new Texture("assets/pieceYellow.png"));
-        pieces.put(PieceColor.PURPLE, new Texture("assets/piecePurple.png"));
-        pieces.put(PieceColor.SELECTED, new Texture("assets/pieceSelected.png"));
+        pieces.put(PieceColor.RED,    new Texture("assets/pieces/pieceRed.png"));
+        pieces.put(PieceColor.BLUE,   new Texture("assets/pieces/pieceBlue.png"));
+        pieces.put(PieceColor.GREEN,  new Texture("assets/pieces/pieceGreen.png"));
+        pieces.put(PieceColor.YELLOW, new Texture("assets/pieces/pieceYellow.png"));
+        pieces.put(PieceColor.PURPLE, new Texture("assets/pieces/piecePurple.png"));
+        pieces.put(PieceColor.SELECTED, new Texture("assets/pieces/pieceSelected.png"));
 
         tile = new Texture("assets/tile.png");
-        selectionMark = new Texture("assets/selectionMark.png");
+        selectionMark = new Texture("assets/marks/selectionMark.png");
     }
 
 

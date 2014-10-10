@@ -65,13 +65,13 @@ public class Game {
         return  null;
     }
 
-    public void startNewGame() {
+    public void startNewGame(final int lvlNum) {
         players = new ArrayList<Player>();
         currentPlayer = null;
         currentPlayerIndex = -1;
 
         board = new Board() {{
-            init("save.igs");
+            init("levels/" + lvlNum + ".igs");
         }};
     }
 

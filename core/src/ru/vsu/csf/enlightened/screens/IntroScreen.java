@@ -10,17 +10,12 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-/**
- * Created by enlightenedcsf on 02.10.14.
- */
+/** Created by enlightenedcsf on 02.10.14. */
 public class IntroScreen extends InfectionScreen {
 
-    private SpriteBatch batch;
     private BitmapFont font;
 
     private Sprite bgSprite;
-
-    private float time;
 
     public IntroScreen(Game game) {
         super(game);
@@ -28,8 +23,7 @@ public class IntroScreen extends InfectionScreen {
 
     @Override
     public void show() {
-        batch = new SpriteBatch();
-        batch.getProjectionMatrix().setToOrtho2D(0, 0, 600, 480);
+        super.show();
 
         Texture bg = new Texture(Gdx.files.internal("assets/spaceship.png"));
         bgSprite = new Sprite(bg);
@@ -41,15 +35,13 @@ public class IntroScreen extends InfectionScreen {
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(1, 1, 1, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        super.render(delta);
 
         batch.begin();
-        font.draw(batch, "EnlightenedCSF production", 50, 50);
+        font.draw(batch, "Ras-ras i v production", 50, 50);
         bgSprite.draw(batch);
         batch.end();
 
-        time += delta;
         if (Gdx.input.isKeyPressed(Input.Keys.ANY_KEY))
             game.setScreen(new MainMenuScreen(game));
     }
@@ -57,6 +49,5 @@ public class IntroScreen extends InfectionScreen {
     @Override
     public void dispose() {
         super.dispose();
-        batch.dispose();
     }
 }

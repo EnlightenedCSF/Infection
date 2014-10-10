@@ -2,6 +2,7 @@ package ru.vsu.csf.enlightened.screens;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import ru.vsu.csf.enlightened.gameobjects.board.Board;
@@ -15,27 +16,37 @@ public class GameScreen extends InfectionScreen {
     private BoardRenderer boardRenderer;
     private UIRenderer uiRenderer;
 
-    public GameScreen(Game game) {
+    private int levelNumber;
+
+    public GameScreen(Game game, int levelNumber) {
         super(game);
+        this.levelNumber = levelNumber;
     }
 
     @Override
     public void show() {
-        ru.vsu.csf.enlightened.gameobjects.Game.getGame().startNewGame();
+        super.show();
+
+        ru.vsu.csf.enlightened.gameobjects.Game.getGame().startNewGame(levelNumber);
         board = ru.vsu.csf.enlightened.gameobjects.Game.getGame().getBoard();
         boardRenderer = new BoardRenderer(board);
         uiRenderer = new UIRenderer();
 
         Gdx.input.setInputProcessor(new InputAdapter(){
             @Override
+            public boolean keyUp(int keycode) {
+                if (keycode == Input.Keys.ESCAPE) {
+                    game.setScreen(new MainMenuScreen(game));
+                    return true;
+                }
+                return false;
+            }
+
+            @Override
             public boolean touchDown(int screenX, int screenY, int pointer, int button) {
                 if (ru.vsu.csf.enlightened.gameobjects.Game.getGame().hasEnded() || boardRenderer.isAnimating())
                     return false;
 
-                /*if (board.click()) {
-                    boardRenderer.getMoveAnimator().init(board);
-                    boardRenderer.getInfectAnimator().init(board);
-                }*/
                 board.click();
                 return true;
             }
@@ -60,8 +71,7 @@ public class GameScreen extends InfectionScreen {
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(1, 1, 1, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        super.render(delta);
 
         boardRenderer.render();
         uiRenderer.render();

@@ -26,7 +26,7 @@ public class UIRenderer {
         font = new BitmapFont() {{
             setColor(Color.GRAY);
         }};
-        defeatMark = new Texture("assets/defeatMark.png");
+        defeatMark = new Texture("assets/marks/defeatMark.png");
     }
 
     public void render() {
@@ -51,7 +51,10 @@ public class UIRenderer {
                 batch.draw(defeatMark, MARGIN_LEFT, 480 - MARGIN_TOP - i*(PLAYER_ICON_SIZE + 5), PLAYER_ICON_SIZE, PLAYER_ICON_SIZE);
             }
 
-            font.draw(batch, player.getScore()+"", MARGIN_LEFT + PLAYER_ICON_SIZE + 5, 480 - MARGIN_TOP - i*(PLAYER_ICON_SIZE) + 20);
+            font.draw(batch, player.getScore()+"",
+                    MARGIN_LEFT + PLAYER_ICON_SIZE + 5,
+                    480 - MARGIN_TOP - i*(PLAYER_ICON_SIZE + 5) + 20
+            );
 
             if (Game.getGame().hasEnded()) {
                 font.draw(batch, "The " + Game.getGame().getCurrentPlayer().getColor() + " has won!", MARGIN_LEFT + 100, 480 - MARGIN_TOP);
