@@ -1,6 +1,9 @@
 package ru.vsu.csf.enlightened.gameobjects.board.points;
 
-/** Created by enlightenedcsf on 10.10.14. */
+/**
+ * Интерфейс для описания точки в двухмерном пространстве
+ * @param <T> Обобщенный тип
+ */
 public interface IPoint<T> {
 
     public void setX(T value);

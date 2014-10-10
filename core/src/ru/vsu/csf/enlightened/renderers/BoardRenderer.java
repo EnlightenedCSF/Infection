@@ -13,25 +13,38 @@ import ru.vsu.csf.enlightened.renderers.animators.PieceMoveAnimator;
 
 import java.util.HashMap;
 
-/** Created by enlightenedcsf on 02.10.14. */
+/**
+ * Класс, ответственный за отрисовку игрового поля
+ */
 public class BoardRenderer {
     private static final boolean DRAW_CELL_INDEXES = false;
 
+    /** Отступ сверху */
     public static final float MARGIN_TOP   = 70;
+    /** Отступ слева */
     public static final float MARGIN_LEFT  = 100;
+    /** Размер клетки */
     public static final float CELL_SIZE    = 50;
+    /** Размер фишки */
     public static final float PIECE_SIZE   = 46;
 
+    /** Текстура метки выделенной клетки */
     public static Texture selectionMark;
+    /** Текстура клетки */
     public static Texture tile;
 
+    /** Текстуры фишек разных цветов */
     public static HashMap<PieceColor, Texture> pieces;
 
+    /** Ссылка на доску */
     private Board board;
 
+    /** Графический контекст */
     private Batch batch = new SpriteBatch();
 
+    /** Аниматор движения */
     private PieceMoveAnimator moveAnimator;
+    /** Аниматор заражения */
     private PieceInfectAnimator infectAnimator;
 
     public boolean isAnimating() {
@@ -45,6 +58,7 @@ public class BoardRenderer {
         loadAssets();
     }
 
+    /** Загружает графические ресурсы из файлов ассетов */
     public void loadAssets() {
         pieces = new HashMap<PieceColor, Texture>();
         pieces.put(PieceColor.RED,    new Texture("assets/pieces/pieceRed.png"));
@@ -58,7 +72,7 @@ public class BoardRenderer {
         selectionMark = new Texture("assets/marks/selectionMark.png");
     }
 
-
+    /** Отрисовка */
     public void render() {
         batch.begin();
         batch.setColor(1, 1, 1, 1);
@@ -81,7 +95,7 @@ public class BoardRenderer {
         batch.end();
     }
 
-
+    /** Отрисовка клеток поля */
     private void drawField() {
         BoardCell[][] cells = board.getCells();
 
@@ -104,6 +118,7 @@ public class BoardRenderer {
         }
     }
 
+
     private void drawIndexes() {
         BoardCell[][] cells = board.getCells();
 
@@ -119,6 +134,7 @@ public class BoardRenderer {
         }
     }
 
+    /** Рисует указатель подсвеченной клетки */
     private void drawSelectedCell() {
         BoardCell[][] cells = board.getCells();
 
@@ -136,6 +152,7 @@ public class BoardRenderer {
         }
     }
 
+    /** Рисует выделенную фишку */
     private void drawSelectedPiece() {
         if (board.hasSelectedPiece()) {
             batch.draw(pieces.get(PieceColor.SELECTED),
@@ -146,6 +163,11 @@ public class BoardRenderer {
         }
     }
 
+    /**
+     * Вычисляет координаты клетки поля, над которой находится указатель мыши
+     * @param x х-координата мыши
+     * @param y у-координата мыши
+     */
     public void setSelectionPosition(int x, int y) {
         x -= MARGIN_LEFT;
         y -= MARGIN_TOP;

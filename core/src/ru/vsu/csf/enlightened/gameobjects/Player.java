@@ -11,11 +11,16 @@ public class Player {
      * Количество набранных очков
      */
     private int score;
-
+    /**
+     * Цвет игрока
+     */
     private PieceColor color;
 
+    /** Флаг поражения игрока */
     private boolean wasDefeated;
+    /** Флаг блокировки игрока */
     private boolean wasLocked;
+    /** Флаг победы игрока */
     private boolean hasWon;
 
     public Player(PieceColor color) {

@@ -10,7 +10,9 @@ import ru.vsu.csf.enlightened.gameobjects.Player;
 
 import java.util.ArrayList;
 
-/** Created by enlightenedcsf on 02.10.14. */
+/**
+ * Класс, рисующий интерфейс пользователя
+ */
 public class UIRenderer {
 
     private static final int MARGIN_TOP  = 40;

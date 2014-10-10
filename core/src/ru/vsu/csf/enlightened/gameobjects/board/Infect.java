@@ -4,11 +4,24 @@ import ru.vsu.csf.enlightened.gameobjects.board.points.IPoint;
 import ru.vsu.csf.enlightened.gameobjects.board.points.Point;
 import ru.vsu.csf.enlightened.gameobjects.piece.PieceColor;
 
-/** Created by enlightenedcsf on 10.10.14. */
+/**
+ * Вспомогательный класс, содержащий результаты одного заражения.
+ */
 public class Infect {
 
+    /**
+     * Первоначальный цвет фишки
+     */
     private PieceColor initialColor;
+
+    /**
+     * Новый цвет фишки
+     */
     private PieceColor finalColor;
+
+    /**
+     * Позицизия, в которой фишка изменяется
+     */
     private IPoint position;
 
     public PieceColor getInitialColor() {

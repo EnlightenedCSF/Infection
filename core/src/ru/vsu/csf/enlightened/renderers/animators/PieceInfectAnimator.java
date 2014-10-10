@@ -10,7 +10,11 @@ import ru.vsu.csf.enlightened.renderers.BoardRenderer;
 
 import java.util.ArrayList;
 
-/** Created by enlightenedcsf on 09.10.14. */
+/**
+ * Аниматор, отвечающий за анимацию заражения фишек.
+ *
+ * Анимация происходит в 2 этапа: сначала фишки меняют цвет на белый, потом - с белого на новый цвет.
+ */
 public class PieceInfectAnimator extends Animator {
 
     private static PieceInfectAnimator instance;
@@ -23,11 +27,18 @@ public class PieceInfectAnimator extends Animator {
         return instance;
     }
 
-
+    /** Текущий уровень прозрачности */
     private float transparency;
+    /** Этап анимации */
     private boolean isDrawingFromWhiteToSecondColor;
+    /** Массив анимируемых фишек */
     private ArrayList<Infect> area;
 
+    /**
+     * Инициализирует аниматор, вычисляет положения фишек
+     * @param board Игровое поле
+     * @param area Массив обрабатываемых фишек
+     */
     public void init(final Board board, ArrayList<Infect> area) {
         this.board = board;
         this.inProgress = true;
@@ -98,6 +109,12 @@ public class PieceInfectAnimator extends Animator {
         }
     }
 
+    /**
+     * Квадратичная функция, введенная для изменения характера перетекания основного цвета в белый и наоборот.
+     * Выбрана квадратичная, и, как следствие, фишка будет сохранять цвет дольше, а переливаться в белый или из белого быстрее
+     * @param transparency Текущий уровень прозрачности
+     * @return Новый уровень прозрачности
+     */
     private float getActualTransparency(float transparency) {
         return transparency * transparency;
     }

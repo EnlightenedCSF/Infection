@@ -17,22 +17,32 @@ import java.util.HashMap;
  * Класс игрового поля.
  * Хранит само поле и фишки.
  */
-@SuppressWarnings("ALL")
 public class Board {
 
+    /** Массив клеток */
     private  BoardCell[][] cells;
+    /** Выделена ли фишка */
     private boolean hasSelectedPiece;
+    /** Координаты клетки под указателем мыши */
     private Point selectedCell;
+    /** Координаты клетки с выделенной фишкой */
     private Point selectedPiecePosition;
 
+    /** Координаты клетки-назначения при перемещении фишки */
     private Point deployPoint;
+    /** Цвет передвигаемой фишки */
     private PieceColor deployColor;
 
+    /** Массив со смещениями x и y-координат, содержащий все клетки, соседние с данной */
     private static Point[] neighbours;
+    /** Массив со смещениями x и y-координат, содержащий все клетки, находящиеся на расстоянии 2 клеток от данной */
     private static Point[] farNeighbours;
 
+    /** Массив, содержащий количества очков каждого из игроков */
     private HashMap<PieceColor, Integer> scores;
+    /** Массив, содержащий информацию о заблокированных игроках */
     private HashMap<PieceColor, Boolean> locks;
+    /** Количество пустых ячеек */
     private int freeCells;
 
     public Board() {
@@ -83,10 +93,6 @@ public class Board {
         return cells;
     }
 
-    public void setCells(BoardCell[][] cells) {
-        this.cells = cells;
-    }
-
     public Point getSelectedCell() {
         return selectedCell;
     }
@@ -99,8 +105,10 @@ public class Board {
         return hasSelectedPiece;
     }
 
-
-
+    /**
+     * Инициализирует содержимое доски; добавляет игроков
+     * @param path Путь к файлу уровня
+     */
     public void init(String path) {
         BufferedReader reader = null;
 
@@ -156,7 +164,7 @@ public class Board {
         }
     }
 
-    public void saveToFile(String path) {
+    /*public void saveToFile(String path) {
 
         BufferedWriter writer = null;
 
@@ -200,10 +208,10 @@ public class Board {
                 e.printStackTrace();
             }
         }
-    }
+    }*/
 
     /**
-     * Метод, обрабатывающий ход
+     * Обрабатывает ход
      * @param from Координаты выбранной фишки
      * @param to Координаты клетки назначения
      */
@@ -231,7 +239,7 @@ public class Board {
 
 
     /**
-     * Метод, обрабатывающий логику заражения соседних фишек, если таковые имеются
+     * Обрабатывает логику заражения соседних фишек, если таковые имеются
      * @param source Клетка, вокруг которой происходит заражение
      */
     protected void infect(Point source) {
@@ -268,11 +276,12 @@ public class Board {
             finishTurn();
         else
             PieceInfectAnimator.getInstance().init(this, area);
-
-
     }
 
-
+    /**
+     * Проверяет, не победил ли один из игроков
+     * @return true, если какой-либо из игроков выиграл
+     */
     private boolean checkIfVictory() {
         if (freeCells == 0) {
             int max = -1;
@@ -310,6 +319,9 @@ public class Board {
         return false;
     }
 
+    /**
+     * Устанавливает флаг поражения игрока в случае, когда убраны все его фишки
+     */
     private void checkIfDefeat() {
         ArrayList<Player> players = Game.getGame().getPlayers();
 
@@ -323,6 +335,9 @@ public class Board {
         }
     }
 
+    /**
+     * Устанавливает флаг блокировки игрока, если ему некуда ходить
+     */
     private void checkIfLocked() {
         ArrayList<Player> players = Game.getGame().getPlayers();
         for (PieceColor color : locks.keySet()) {
@@ -382,28 +397,53 @@ public class Board {
         }
     }
 
+    /**
+     * Возвращает расстояние между клетками
+     * @param x1 x1
+     * @param y1 y1
+     * @param x2 x2
+     * @param y2 y2
+     * @return Расстояние между клетками
+     */
     private int getDistance(int x1, int y1, int x2, int y2) {
         return Math.max(Math.abs(x1 - x2), Math.abs(y1 - y2));
     }
 
+
+    /**
+     * Проверяет, пуста ли клетка (не учитывает наличие фишки в клетке)
+     * @param x х-координата
+     * @param y у-координата
+     * @return true, если пуста
+     */
     private boolean ifCellIsEmpty(int x, int y) {
         return (x >= 0 && x < cells.length &&
                 y >= 0 && y < cells[0].length &&
                 !cells[x][y].isEmpty());
     }
 
+    /**
+     * Проверяет, пуста ли клетка (не учитывает наличие фишки в клетке)
+     * @param p Координата
+     * @return true, если пуста
+     */
     private boolean ifCellIsEmpty(Point p) {
         return this.ifCellIsEmpty(p.getX(), p.getY());
     }
 
+    /**
+     * Проверяет, пуста ли клетка (не учитывает наличие фишки в клетке)
+     * @param x x-координата
+     * @param y у-координата
+     * @return true, если пуста
+     */
     private boolean ifCellIsEmptyAndContainsNoOne(int x, int y) {
         return this.ifCellIsEmpty(x, y) && cells[x][y].getPiece() == null;
     }
 
-    private boolean ifCellIsEmptyAndContainsNoOne(Point p) {
-        return this.ifCellIsEmptyAndContainsNoOne(p.getX(), p.getY());
-    }
-
+    /**
+     * Обрабатывает последовательность действий, совершаемых после щелчка мыши
+     */
     public void click() {
         if (!ifCellIsEmpty(selectedCell))
             return;
@@ -430,7 +470,9 @@ public class Board {
         }
     }
 
-
+    /**
+     * Возвращает фишку на клетку поля после того, как она переместилась
+     */
     public void deployPiece() {
         cells[deployPoint.getX()][deployPoint.getY()].setPiece(new Piece(deployColor));
 
@@ -440,10 +482,19 @@ public class Board {
         infect(deployPoint);
     }
 
+    /**
+     * Создает новую фишку
+     * @param x х-координата
+     * @param y у-координата
+     * @param color Цвет новой фишки
+     */
     public void deployPiece(int x, int y, PieceColor color) {
         cells[x][y].setPiece(new Piece(color));
     }
 
+    /**
+     * Проверяет на состояние победы, поражения или блокировки игрока и передает ход
+     */
     public void finishTurn() {
         checkIfDefeat();
         if (!checkIfVictory())

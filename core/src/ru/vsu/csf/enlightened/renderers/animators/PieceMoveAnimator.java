@@ -6,16 +6,28 @@ import ru.vsu.csf.enlightened.gameobjects.board.points.FloatPoint;
 import ru.vsu.csf.enlightened.gameobjects.Game;
 import ru.vsu.csf.enlightened.renderers.BoardRenderer;
 
-/** Created by enlightenedcsf on 06.10.14. */
+/**
+ * Аниматор, занимающийся передвижением фишек
+ */
 public class PieceMoveAnimator extends Animator {
 
+    /**
+     * Абсолютная скорость передвижения
+     */
     private static final double SPEED = 4;
+    /**
+     * Точность достижения конечной локации
+     */
     private static final double EPS   = 3;
 
+    /** Текущее положение */
     private FloatPoint position;
+    /** Пункт назначения */
     private FloatPoint destination;
 
+    /** Скорость по оси х */
     private double speedX;
+    /** Скорость по оси у*/
     private double speedY;
 
     private static PieceMoveAnimator instance;
@@ -30,6 +42,10 @@ public class PieceMoveAnimator extends Animator {
         return instance;
     }
 
+    /**
+     * Инициализирует аниматор: вычисляет координаты и скорость
+     * @param board Ссылка на игровое поле
+     */
     public void init(final Board board) {
         this.board = board;
 
@@ -50,6 +66,12 @@ public class PieceMoveAnimator extends Animator {
         speedY = SPEED * Math.sin(phi);
     }
 
+    /**
+     * Определяет расстояние между 2 точками
+     * @param self Текущее положение
+     * @param target Конечный пункт
+     * @return Расстояние
+     */
     private double getDistance(FloatPoint self, FloatPoint target) {
         return Math.sqrt((self.getX() - target.getX())*(self.getX() - target.getX()) + (self.getY() - target.getY())*(self.getY() - target.getY()));
     }

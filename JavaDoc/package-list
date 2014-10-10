@@ -1,0 +1,10 @@
+ru.vsu.csf.enlightened
+ru.vsu.csf.enlightened.gameobjects
+ru.vsu.csf.enlightened.gameobjects.board
+ru.vsu.csf.enlightened.gameobjects.board.points
+ru.vsu.csf.enlightened.gameobjects.piece
+ru.vsu.csf.enlightened.renderers
+ru.vsu.csf.enlightened.renderers.animators
+ru.vsu.csf.enlightened.screens
+ru.vsu.csf.enlightened.screens.button
+ru.vsu.csf.enlightened.screens.button.pressaction

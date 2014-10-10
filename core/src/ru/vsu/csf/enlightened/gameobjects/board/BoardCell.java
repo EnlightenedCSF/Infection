@@ -26,10 +26,6 @@ public class BoardCell {
         return isEmpty;
     }
 
-    public void setEmpty(boolean isEmpty) {
-        this.isEmpty = isEmpty;
-    }
-
     public Piece getPiece() {
         return piece;
     }

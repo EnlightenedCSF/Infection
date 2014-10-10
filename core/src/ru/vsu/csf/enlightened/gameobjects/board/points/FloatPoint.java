@@ -1,7 +1,7 @@
 package ru.vsu.csf.enlightened.gameobjects.board.points;
 
 /**
- * Вспомогательный класс для инкапсуляции координат клетки поля.
+ * Вспомогательный класс для инкапсуляции координат.
  */
 public class FloatPoint implements IPoint<Float> {
 
