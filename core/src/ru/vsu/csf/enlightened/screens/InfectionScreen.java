@@ -1,4 +1,4 @@
-package ru.vsu.csf.enlightened.Screens;
+package ru.vsu.csf.enlightened.screens;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;

@@ -1,12 +1,12 @@
-package ru.vsu.csf.enlightened.Renderers;
+package ru.vsu.csf.enlightened.renderers;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import ru.vsu.csf.enlightened.GameObjects.Game;
-import ru.vsu.csf.enlightened.GameObjects.Player;
+import ru.vsu.csf.enlightened.gameobjects.Game;
+import ru.vsu.csf.enlightened.gameobjects.Player;
 
 import java.util.ArrayList;
 
@@ -17,9 +17,9 @@ public class UIRenderer {
     private static final int MARGIN_LEFT = 10;
     private static final int PLAYER_ICON_SIZE = 30;
 
-    BitmapFont font;
-    Texture defeatMark;
-    Batch batch;
+    private BitmapFont font;
+    private Texture defeatMark;
+    private Batch batch;
 
     public UIRenderer() {
         batch = new SpriteBatch();
@@ -41,23 +41,11 @@ public class UIRenderer {
                 batch.draw(BoardRenderer.selectionMark, MARGIN_LEFT, 480 - MARGIN_TOP - i*(PLAYER_ICON_SIZE + 5), PLAYER_ICON_SIZE, PLAYER_ICON_SIZE);
             }
 
-            switch (player.getColor()) {
-                case RED:
-                    batch.draw(BoardRenderer.pieceRed, MARGIN_LEFT, 480 - MARGIN_TOP - i*(PLAYER_ICON_SIZE + 5), PLAYER_ICON_SIZE, PLAYER_ICON_SIZE);
-                    break;
-                case GREEN:
-                    batch.draw(BoardRenderer.pieceGreen, MARGIN_LEFT, 480 - MARGIN_TOP - i*(PLAYER_ICON_SIZE + 5), PLAYER_ICON_SIZE, PLAYER_ICON_SIZE);
-                    break;
-                case PURPLE:
-                    batch.draw(BoardRenderer.piecePurple, MARGIN_LEFT, 480 - MARGIN_TOP - i*(PLAYER_ICON_SIZE + 5), PLAYER_ICON_SIZE, PLAYER_ICON_SIZE);
-                    break;
-                case YELLOW:
-                    batch.draw(BoardRenderer.pieceYellow, MARGIN_LEFT, 480 - MARGIN_TOP - i*(PLAYER_ICON_SIZE + 5), PLAYER_ICON_SIZE, PLAYER_ICON_SIZE);
-                    break;
-                case BLUE:
-                    batch.draw(BoardRenderer.pieceBlue, MARGIN_LEFT, 480 - MARGIN_TOP - i*(PLAYER_ICON_SIZE + 5), PLAYER_ICON_SIZE, PLAYER_ICON_SIZE);
-                    break;
-            }
+            batch.draw(BoardRenderer.pieces.get(player.getColor()),
+                    MARGIN_LEFT,
+                    480 - MARGIN_TOP - i*(PLAYER_ICON_SIZE + 5),
+                    PLAYER_ICON_SIZE, PLAYER_ICON_SIZE
+            );
 
             if (player.wasDefeated()) {
                 batch.draw(defeatMark, MARGIN_LEFT, 480 - MARGIN_TOP - i*(PLAYER_ICON_SIZE + 5), PLAYER_ICON_SIZE, PLAYER_ICON_SIZE);

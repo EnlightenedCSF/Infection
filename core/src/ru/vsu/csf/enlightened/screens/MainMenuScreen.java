@@ -1,4 +1,4 @@
-package ru.vsu.csf.enlightened.Screens;
+package ru.vsu.csf.enlightened.screens;
 
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.GL20;
@@ -6,10 +6,10 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import ru.vsu.csf.enlightened.GameObjects.Board.Board;
-import ru.vsu.csf.enlightened.GameObjects.Board.BoardCell;
-import ru.vsu.csf.enlightened.GameObjects.Piece.Piece;
-import ru.vsu.csf.enlightened.GameObjects.Piece.PieceColor;
+import ru.vsu.csf.enlightened.gameobjects.board.Board;
+import ru.vsu.csf.enlightened.gameobjects.board.BoardCell;
+import ru.vsu.csf.enlightened.gameobjects.piece.Piece;
+import ru.vsu.csf.enlightened.gameobjects.piece.PieceColor;
 
 /** Created by enlightenedcsf on 02.10.14. */
 public class MainMenuScreen extends InfectionScreen {
@@ -58,16 +58,33 @@ public class MainMenuScreen extends InfectionScreen {
                 if (multiplayerBtn.getBoundingRectangle().contains(screenX, screenY)) {
                     Board board = new Board();
 
-                    BoardCell[][] t = new BoardCell[5][5];
+                    BoardCell[][] t = new BoardCell[7][7];
                     for (int j = 0; j < t[0].length; j++)
                         for (int i = 0; i < t.length; i++)
                             t[i][j] = new BoardCell(false);
 
+                    t[0][0].setEmpty(true);
+                    t[1][0].setEmpty(true);
+                    t[0][1].setEmpty(true);
 
-                    t[1][0].setPiece(new Piece(PieceColor.RED));
-                    t[0][1].setPiece(new Piece(PieceColor.RED));
-                    t[4][3].setPiece(new Piece(PieceColor.BLUE));
-                    t[3][4].setPiece(new Piece(PieceColor.BLUE));
+                    t[6][6].setEmpty(true);
+                    t[5][6].setEmpty(true);
+                    t[6][5].setEmpty(true);
+
+                    t[0][6].setEmpty(true);
+                    t[0][5].setEmpty(true);
+                    t[1][6].setEmpty(true);
+
+                    t[6][0].setEmpty(true);
+                    t[6][1].setEmpty(true);
+                    t[5][0].setEmpty(true);
+
+                    t[3][3].setEmpty(true);
+
+                    t[0][3].setPiece(new Piece(PieceColor.RED));
+                    t[3][0].setPiece(new Piece(PieceColor.BLUE));
+                    t[3][6].setPiece(new Piece(PieceColor.GREEN));
+                    t[6][3].setPiece(new Piece(PieceColor.YELLOW));
 
                     board.setCells(t);
                     board.saveToFile("save.igs");

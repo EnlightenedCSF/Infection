@@ -1,10 +1,12 @@
-package ru.vsu.csf.enlightened.GameObjects.Board;
+package ru.vsu.csf.enlightened.gameobjects.board;
 
-import com.badlogic.gdx.Gdx;
-import ru.vsu.csf.enlightened.GameObjects.Game;
-import ru.vsu.csf.enlightened.GameObjects.Piece.Piece;
-import ru.vsu.csf.enlightened.GameObjects.Piece.PieceColor;
-import ru.vsu.csf.enlightened.GameObjects.Player;
+import ru.vsu.csf.enlightened.gameobjects.Game;
+import ru.vsu.csf.enlightened.gameobjects.board.points.Point;
+import ru.vsu.csf.enlightened.gameobjects.piece.Piece;
+import ru.vsu.csf.enlightened.gameobjects.piece.PieceColor;
+import ru.vsu.csf.enlightened.gameobjects.Player;
+import ru.vsu.csf.enlightened.renderers.animators.PieceInfectAnimator;
+import ru.vsu.csf.enlightened.renderers.animators.PieceMoveAnimator;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -15,6 +17,7 @@ import java.util.HashMap;
  * Класс игрового поля.
  * Хранит само поле и фишки.
  */
+@SuppressWarnings("ALL")
 public class Board {
 
     private  BoardCell[][] cells;
@@ -232,6 +235,7 @@ public class Board {
      * @param source Клетка, вокруг которой происходит заражение
      */
     protected void infect(Point source) {
+        ArrayList<Infect> area = new ArrayList<Infect>();
         int xs = source.getX();
         int ys = source.getY();
 
@@ -246,10 +250,10 @@ public class Board {
                 Piece enemy = cells[x][y].getPiece();
                 if (enemy != null && enemy.getColor() != currentPlayer.getColor()){
 
+                    area.add(new Infect(enemy.getColor(), currentPlayer.getColor(), new Point(x, y)));
+
                     Integer enemyCount = scores.get(enemy.getColor());
                     scores.put(enemy.getColor(), --enemyCount);
-
-                    enemy.setColor(Game.getGame().getCurrentPlayer().getColor());
 
                     playerCount++;
 
@@ -260,9 +264,12 @@ public class Board {
 
         scores.put(currentPlayer.getColor(), playerCount);
 
-        checkIfDefeat();
-        if (!checkIfVictory())
-            checkIfLocked();
+        if (area.size() == 0)
+            finishTurn();
+        else
+            PieceInfectAnimator.getInstance().init(this, area);
+
+
     }
 
 
@@ -282,11 +289,11 @@ public class Board {
         }
         else {
             boolean ok = true;
-            boolean kostbIl = false;
+            boolean wasFirstNonZero = false;
             for (PieceColor color : scores.keySet()) {
                 if (scores.get(color) > 0) {
-                    if (!kostbIl)
-                        kostbIl = true;
+                    if (!wasFirstNonZero)
+                        wasFirstNonZero = true;
                     else {
                         ok = false;
                         break;
@@ -379,11 +386,30 @@ public class Board {
         return Math.max(Math.abs(x1 - x2), Math.abs(y1 - y2));
     }
 
+    private boolean ifCellIsEmpty(int x, int y) {
+        return (x >= 0 && x < cells.length &&
+                y >= 0 && y < cells[0].length &&
+                !cells[x][y].isEmpty());
+    }
 
-    public boolean click() {
-        boolean result = false;
+    private boolean ifCellIsEmpty(Point p) {
+        return this.ifCellIsEmpty(p.getX(), p.getY());
+    }
+
+    private boolean ifCellIsEmptyAndContainsNoOne(int x, int y) {
+        return this.ifCellIsEmpty(x, y) && cells[x][y].getPiece() == null;
+    }
+
+    private boolean ifCellIsEmptyAndContainsNoOne(Point p) {
+        return this.ifCellIsEmptyAndContainsNoOne(p.getX(), p.getY());
+    }
+
+    public void click() {
+        if (!ifCellIsEmpty(selectedCell))
+            return;
 
         Piece piece = cells[selectedCell.getX()][selectedCell.getY()].getPiece();
+
         if (piece != null && piece.getColor() == Game.getGame().getCurrentPlayer().getColor()) {
             hasSelectedPiece = true;
             selectedPiecePosition.setX(selectedCell.getX());
@@ -397,13 +423,13 @@ public class Board {
                     cells[selectedCell.getX()][selectedCell.getY()].getPiece() == null) {
 
                 makeMove(selectedPiecePosition, selectedCell);
-                result = true;
+                PieceMoveAnimator.getInstance().init(this);
             }
 
             hasSelectedPiece = false;
         }
-        return result;
     }
+
 
     public void deployPiece() {
         cells[deployPoint.getX()][deployPoint.getY()].setPiece(new Piece(deployColor));
@@ -411,7 +437,18 @@ public class Board {
         selectedPiecePosition.setX(-1);
         selectedPiecePosition.setY(-1);
 
-        //todo: infect animation
         infect(deployPoint);
+    }
+
+    public void deployPiece(int x, int y, PieceColor color) {
+        cells[x][y].setPiece(new Piece(color));
+    }
+
+    public void finishTurn() {
+        checkIfDefeat();
+        if (!checkIfVictory())
+            checkIfLocked();
+
+        Game.getGame().passTurn();
     }
 }

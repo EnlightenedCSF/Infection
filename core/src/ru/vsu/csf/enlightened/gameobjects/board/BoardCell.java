@@ -1,6 +1,6 @@
-package ru.vsu.csf.enlightened.GameObjects.Board;
+package ru.vsu.csf.enlightened.gameobjects.board;
 
-import ru.vsu.csf.enlightened.GameObjects.Piece.Piece;
+import ru.vsu.csf.enlightened.gameobjects.piece.Piece;
 
 /**
  * Вспомогательный класс клетки игрового поля.

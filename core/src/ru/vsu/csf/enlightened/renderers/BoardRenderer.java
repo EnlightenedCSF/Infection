@@ -1,18 +1,20 @@
-package ru.vsu.csf.enlightened.Renderers;
+package ru.vsu.csf.enlightened.renderers;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import ru.vsu.csf.enlightened.GameObjects.Board.Board;
-import ru.vsu.csf.enlightened.GameObjects.Board.BoardCell;
-import ru.vsu.csf.enlightened.Renderers.animators.PieceInfectAnimator;
-import ru.vsu.csf.enlightened.Renderers.animators.PieceMoveAnimator;
+import ru.vsu.csf.enlightened.gameobjects.board.Board;
+import ru.vsu.csf.enlightened.gameobjects.board.BoardCell;
+import ru.vsu.csf.enlightened.gameobjects.piece.PieceColor;
+import ru.vsu.csf.enlightened.renderers.animators.PieceInfectAnimator;
+import ru.vsu.csf.enlightened.renderers.animators.PieceMoveAnimator;
+
+import java.util.HashMap;
 
 /** Created by enlightenedcsf on 02.10.14. */
 public class BoardRenderer {
-
     private static final boolean DRAW_CELL_INDEXES = false;
 
     public static final float MARGIN_TOP   = 70;
@@ -20,9 +22,10 @@ public class BoardRenderer {
     public static final float CELL_SIZE    = 50;
     public static final float PIECE_SIZE   = 46;
 
-    public static Texture pieceRed, pieceBlue, pieceGreen, piecePurple, pieceYellow, pieceSelected;
     public static Texture selectionMark;
     public static Texture tile;
+
+    public static HashMap<PieceColor, Texture> pieces;
 
     private Board board;
 
@@ -35,28 +38,22 @@ public class BoardRenderer {
         return moveAnimator.isInProgress();
     }
 
-    public PieceMoveAnimator getMoveAnimator() {
-        return moveAnimator;
-    }
-
-    public PieceInfectAnimator getInfectAnimator() {
-        return infectAnimator;
-    }
-
     public BoardRenderer(Board board) {
         this.board = board;
-        moveAnimator = new PieceMoveAnimator(board);
-        infectAnimator = new PieceInfectAnimator(board);
+        moveAnimator = PieceMoveAnimator.getInstance();
+        infectAnimator = PieceInfectAnimator.getInstance();
         loadAssets();
     }
 
     public void loadAssets() {
-        pieceRed = new Texture("assets/pieceRed.png");
-        pieceBlue = new Texture("assets/pieceBlue.png");
-        pieceGreen = new Texture("assets/pieceGreen.png");
-        piecePurple = new Texture("assets/piecePurple.png");
-        pieceYellow = new Texture("assets/pieceYellow.png");
-        pieceSelected = new Texture("assets/pieceSelected.png");
+        pieces = new HashMap<PieceColor, Texture>();
+        pieces.put(PieceColor.RED,    new Texture("assets/pieceRed.png"));
+        pieces.put(PieceColor.BLUE,   new Texture("assets/pieceBlue.png"));
+        pieces.put(PieceColor.GREEN,  new Texture("assets/pieceGreen.png"));
+        pieces.put(PieceColor.YELLOW, new Texture("assets/pieceYellow.png"));
+        pieces.put(PieceColor.PURPLE, new Texture("assets/piecePurple.png"));
+        pieces.put(PieceColor.SELECTED, new Texture("assets/pieceSelected.png"));
+
         tile = new Texture("assets/tile.png");
         selectionMark = new Texture("assets/selectionMark.png");
     }
@@ -78,7 +75,6 @@ public class BoardRenderer {
         if (moveAnimator.isInProgress())
             moveAnimator.render(batch);
 
-
         if (infectAnimator.isInProgress())
             infectAnimator.render(batch);
 
@@ -95,23 +91,13 @@ public class BoardRenderer {
                     batch.draw(tile, MARGIN_LEFT + i*CELL_SIZE, MARGIN_TOP + j*CELL_SIZE, CELL_SIZE, CELL_SIZE);
 
                     if (cells[i][j].getPiece() != null) {
-                        switch (cells[i][j].getPiece().getColor()) {
-                            case RED:
-                                batch.draw(pieceRed, MARGIN_LEFT + i*CELL_SIZE + 4, MARGIN_TOP + j*CELL_SIZE + 4, PIECE_SIZE, PIECE_SIZE);
-                                break;
-                            case BLUE:
-                                batch.draw(pieceBlue, MARGIN_LEFT + i*CELL_SIZE + 4, MARGIN_TOP + j*CELL_SIZE + 4, PIECE_SIZE, PIECE_SIZE);
-                                break;
-                            case GREEN:
-                                batch.draw(pieceGreen, MARGIN_LEFT + i*CELL_SIZE + 4, MARGIN_TOP + j*CELL_SIZE + 4, PIECE_SIZE, PIECE_SIZE);
-                                break;
-                            case PURPLE:
-                                batch.draw(piecePurple, MARGIN_LEFT + i*CELL_SIZE + 4, MARGIN_TOP + j*CELL_SIZE + 4, PIECE_SIZE, PIECE_SIZE);
-                                break;
-                            case YELLOW:
-                                batch.draw(pieceYellow, MARGIN_LEFT + i*CELL_SIZE + 4, MARGIN_TOP + j*CELL_SIZE + 4, PIECE_SIZE, PIECE_SIZE);
-                                break;
-                        }
+                        batch.draw(
+                                pieces.get(cells[i][j].getPiece().getColor()),
+                                MARGIN_LEFT + i*CELL_SIZE + 4,
+                                MARGIN_TOP + j*CELL_SIZE + 4,
+                                PIECE_SIZE,
+                                PIECE_SIZE
+                        );
                     }
                 }
             }
@@ -152,7 +138,8 @@ public class BoardRenderer {
 
     private void drawSelectedPiece() {
         if (board.hasSelectedPiece()) {
-            batch.draw(pieceSelected, MARGIN_LEFT + board.getSelectedPiecePosition().getX() *CELL_SIZE + 4,
+            batch.draw(pieces.get(PieceColor.SELECTED),
+                    MARGIN_LEFT + board.getSelectedPiecePosition().getX() *CELL_SIZE + 4,
                     MARGIN_TOP + board.getSelectedPiecePosition().getY() *CELL_SIZE + 4,
                     CELL_SIZE - 4,
                     CELL_SIZE - 4);

@@ -1,4 +1,4 @@
-package ru.vsu.csf.enlightened.GameObjects;
+package ru.vsu.csf.enlightened.gameobjects;
 
 import java.io.File;
 import java.util.ArrayList;

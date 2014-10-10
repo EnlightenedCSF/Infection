@@ -1,7 +1,7 @@
-package ru.vsu.csf.enlightened.GameObjects;
+package ru.vsu.csf.enlightened.gameobjects;
 
-import ru.vsu.csf.enlightened.GameObjects.Board.Board;
-import ru.vsu.csf.enlightened.GameObjects.Piece.PieceColor;
+import ru.vsu.csf.enlightened.gameobjects.board.Board;
+import ru.vsu.csf.enlightened.gameobjects.piece.PieceColor;
 
 import java.util.ArrayList;
 

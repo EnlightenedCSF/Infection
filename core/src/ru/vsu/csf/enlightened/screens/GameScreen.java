@@ -1,12 +1,12 @@
-package ru.vsu.csf.enlightened.Screens;
+package ru.vsu.csf.enlightened.screens;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.GL20;
-import ru.vsu.csf.enlightened.GameObjects.Board.Board;
-import ru.vsu.csf.enlightened.Renderers.BoardRenderer;
-import ru.vsu.csf.enlightened.Renderers.UIRenderer;
+import ru.vsu.csf.enlightened.gameobjects.board.Board;
+import ru.vsu.csf.enlightened.renderers.BoardRenderer;
+import ru.vsu.csf.enlightened.renderers.UIRenderer;
 
 /** Created by enlightenedcsf on 02.10.14. */
 public class GameScreen extends InfectionScreen {
@@ -21,21 +21,22 @@ public class GameScreen extends InfectionScreen {
 
     @Override
     public void show() {
-        ru.vsu.csf.enlightened.GameObjects.Game.getGame().startNewGame();
-        board = ru.vsu.csf.enlightened.GameObjects.Game.getGame().getBoard();
+        ru.vsu.csf.enlightened.gameobjects.Game.getGame().startNewGame();
+        board = ru.vsu.csf.enlightened.gameobjects.Game.getGame().getBoard();
         boardRenderer = new BoardRenderer(board);
         uiRenderer = new UIRenderer();
 
         Gdx.input.setInputProcessor(new InputAdapter(){
             @Override
             public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-                if (ru.vsu.csf.enlightened.GameObjects.Game.getGame().hasEnded() || boardRenderer.isAnimating())
+                if (ru.vsu.csf.enlightened.gameobjects.Game.getGame().hasEnded() || boardRenderer.isAnimating())
                     return false;
 
-                if (board.click()) {
-                    boardRenderer.getMoveAnimator().init();
-                    boardRenderer.getInfectAnimator().init();
-                }
+                /*if (board.click()) {
+                    boardRenderer.getMoveAnimator().init(board);
+                    boardRenderer.getInfectAnimator().init(board);
+                }*/
+                board.click();
                 return true;
             }
 
@@ -48,7 +49,7 @@ public class GameScreen extends InfectionScreen {
 
             @Override
             public boolean keyDown(int keycode) {
-                if (ru.vsu.csf.enlightened.GameObjects.Game.getGame().hasEnded()) {
+                if (ru.vsu.csf.enlightened.gameobjects.Game.getGame().hasEnded()) {
                     game.setScreen(new MainMenuScreen(game));
                     return true;
                 }

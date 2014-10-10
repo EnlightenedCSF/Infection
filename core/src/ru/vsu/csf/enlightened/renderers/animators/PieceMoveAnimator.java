@@ -1,11 +1,10 @@
-package ru.vsu.csf.enlightened.Renderers.animators;
+package ru.vsu.csf.enlightened.renderers.animators;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
-import ru.vsu.csf.enlightened.GameObjects.Board.Board;
-import ru.vsu.csf.enlightened.GameObjects.Board.FloatPoint;
-import ru.vsu.csf.enlightened.GameObjects.Board.Point;
-import ru.vsu.csf.enlightened.GameObjects.Game;
-import ru.vsu.csf.enlightened.Renderers.BoardRenderer;
+import ru.vsu.csf.enlightened.gameobjects.board.Board;
+import ru.vsu.csf.enlightened.gameobjects.board.points.FloatPoint;
+import ru.vsu.csf.enlightened.gameobjects.Game;
+import ru.vsu.csf.enlightened.renderers.BoardRenderer;
 
 /** Created by enlightenedcsf on 06.10.14. */
 public class PieceMoveAnimator extends Animator {
@@ -15,22 +14,25 @@ public class PieceMoveAnimator extends Animator {
 
     private FloatPoint position;
     private FloatPoint destination;
-    private boolean inProgress;
 
     private double speedX;
     private double speedY;
 
-    public PieceMoveAnimator(Board board) {
-        super(board);
+    private static PieceMoveAnimator instance;
+    private PieceMoveAnimator() {
+        inProgress = false;
+        speedX = 0;
+        speedY = 0;
+    }
+    public static PieceMoveAnimator getInstance() {
+        if (instance == null)
+            instance = new PieceMoveAnimator();
+        return instance;
     }
 
-    @Override
-    public boolean isInProgress() {
-        return inProgress;
-    }
+    public void init(final Board board) {
+        this.board = board;
 
-    @Override
-    public void init() {
         position = new FloatPoint() {{
             setX(BoardRenderer.MARGIN_LEFT + board.getSelectedPiecePosition().getX()*BoardRenderer.PIECE_SIZE + 4);
             setY(BoardRenderer.MARGIN_TOP + board.getSelectedPiecePosition().getY()*BoardRenderer.PIECE_SIZE + 4);
@@ -58,14 +60,11 @@ public class PieceMoveAnimator extends Animator {
             position.setX((float) (position.getX() + speedX));
             position.setY((float) (position.getY() + speedY));
 
-            switch (Game.getGame().getCurrentPlayer().getColor()) {
-                case RED:
-                    batch.draw(BoardRenderer.pieceRed, position.getX(), position.getY(), BoardRenderer.PIECE_SIZE, BoardRenderer.PIECE_SIZE);
-                    break;
-                case BLUE:
-                    batch.draw(BoardRenderer.pieceBlue, position.getX(), position.getY(), BoardRenderer.PIECE_SIZE, BoardRenderer.PIECE_SIZE);
-            }
-
+            batch.draw(
+                    BoardRenderer.pieces.get(Game.getGame().getCurrentPlayer().getColor()),
+                    position.getX(), position.getY(),
+                    BoardRenderer.PIECE_SIZE, BoardRenderer.PIECE_SIZE
+            );
         }
         else {
             inProgress = false;

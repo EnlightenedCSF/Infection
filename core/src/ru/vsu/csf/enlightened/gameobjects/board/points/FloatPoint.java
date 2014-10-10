@@ -1,39 +1,39 @@
-package ru.vsu.csf.enlightened.GameObjects.Board;
+package ru.vsu.csf.enlightened.gameobjects.board.points;
 
 /**
  * Вспомогательный класс для инкапсуляции координат клетки поля.
  */
-public class FloatPoint {
+public class FloatPoint implements IPoint<Float> {
 
     /**Х-компонента*/
-    private float x;
+    private Float x;
 
     /**Y-компонента*/
-    private float y;
+    private Float y;
 
     public FloatPoint() {
-        x = 0;
-        y = 0;
+        x = 0f;
+        y = 0f;
     }
 
-    public FloatPoint(float x, float y) {
+    public FloatPoint(Float x, Float y) {
         this.x = x;
         this.y = y;
     }
 
-    public float getX() {
+    public Float getX() {
         return x;
     }
 
-    public void setX(float x) {
+    public void setX(Float x) {
         this.x = x;
     }
 
-    public float getY() {
+    public Float getY() {
         return y;
     }
 
-    public void setY(float y) {
+    public void setY(Float y) {
         this.y = y;
     }
 }

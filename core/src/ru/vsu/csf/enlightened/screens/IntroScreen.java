@@ -1,4 +1,4 @@
-package ru.vsu.csf.enlightened.Screens;
+package ru.vsu.csf.enlightened.screens;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -15,13 +15,12 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
  */
 public class IntroScreen extends InfectionScreen {
 
-    SpriteBatch batch;
-    BitmapFont font;
+    private SpriteBatch batch;
+    private BitmapFont font;
 
-    Texture bg;
-    Sprite bgSprite;
+    private Sprite bgSprite;
 
-    float time;
+    private float time;
 
     public IntroScreen(Game game) {
         super(game);
@@ -32,7 +31,7 @@ public class IntroScreen extends InfectionScreen {
         batch = new SpriteBatch();
         batch.getProjectionMatrix().setToOrtho2D(0, 0, 600, 480);
 
-        bg = new Texture(Gdx.files.internal("assets/spaceship.png"));
+        Texture bg = new Texture(Gdx.files.internal("assets/spaceship.png"));
         bgSprite = new Sprite(bg);
         bgSprite.setPosition(InfectionScreen.W/2 - bgSprite.getWidth()/2, InfectionScreen.H/2 - bgSprite.getHeight()/2);
 

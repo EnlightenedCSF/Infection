@@ -1,6 +1,6 @@
-package ru.vsu.csf.enlightened.GameObjects;
+package ru.vsu.csf.enlightened.gameobjects;
 
-import ru.vsu.csf.enlightened.GameObjects.Piece.PieceColor;
+import ru.vsu.csf.enlightened.gameobjects.piece.PieceColor;
 
 /**
  * Класс игрока

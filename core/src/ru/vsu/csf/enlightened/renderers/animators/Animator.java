@@ -1,7 +1,7 @@
-package ru.vsu.csf.enlightened.Renderers.animators;
+package ru.vsu.csf.enlightened.renderers.animators;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
-import ru.vsu.csf.enlightened.GameObjects.Board.Board;
+import ru.vsu.csf.enlightened.gameobjects.board.Board;
 
 /** Created by enlightenedcsf on 09.10.14. */
 public abstract class Animator {
@@ -13,11 +13,5 @@ public abstract class Animator {
         return inProgress;
     }
 
-    public Animator(Board board) {
-        this.board = board;
-    }
-
-    public abstract void init();
     public abstract void render(Batch batch);
-
 }
